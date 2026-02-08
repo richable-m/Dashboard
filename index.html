@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bento Dashboard V6</title>
+    <title>Bento Dashboard V7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -17,7 +17,7 @@
             flex-direction: column; 
             transition: all 0.3s ease; 
         }
-        /* Make the scrollbar look nice inside lists */
+        /* Custom Scrollbar */
         .scroller { overflow-y: auto; max-height: 250px; }
         .scroller::-webkit-scrollbar { width: 4px; }
         .scroller::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
@@ -27,16 +27,24 @@
 
     <div class="w-full max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-4">
         
-        <div class="md:col-span-2 md:row-span-2 bento-card p-0 overflow-hidden relative group min-h-[300px]">
-            <div id="player" class="w-full h-full absolute inset-0"></div>
+        <div class="md:col-span-2 md:row-span-2 bento-card p-0 overflow-hidden relative group min-h-[350px]">
+            <iframe 
+                src="https://www.youtube-nocookie.com/embed/DUzQadS3aJ0?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0" 
+                title="YouTube video player"
+                class="absolute inset-0 w-full h-full"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+
             <div class="absolute top-4 left-4 z-10 pointer-events-none">
-                <span class="bg-black/50 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-md uppercase tracking-widest">
+                <span class="bg-black/60 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-md uppercase tracking-widest border border-white/10">
                     Focus Mode
                 </span>
             </div>
         </div>
 
-        <div class="md:col-span-2 bento-card flex flex-col justify-center items-start pl-8">
+        <div class="md:col-span-2 bento-card flex flex-col justify-center items-start pl-8 min-h-[160px]">
             <h1 id="clock" class="text-6xl md:text-8xl font-bold tracking-tighter text-white">00:00</h1>
             <p id="date" class="text-zinc-500 text-xl font-medium uppercase tracking-widest mt-2">Loading...</p>
         </div>
@@ -79,34 +87,8 @@
 
     </div>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // 1. YouTube Player (Large & Auto-Play)
-        let player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '100%',
-                width: '100%',
-                videoId: 'DUzQadS3aJ0', // Lofi Girl Radio
-                playerVars: {
-                    'playsinline': 1,
-                    'autoplay': 1,
-                    'mute': 1,
-                    'controls': 1, // Show controls so you can unmute
-                    'modestbranding': 1,
-                    'loop': 1,
-                    'playlist': 'DUzQadS3aJ0' // Required for loop
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-        function onPlayerReady(event) {
-            event.target.playVideo();
-        }
-
-        // 2. Clock Logic
+        // 1. Clock Logic
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -115,7 +97,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 3. Habits & Tasks Logic
+        // 2. Habits & Tasks Logic
         let habits = JSON.parse(localStorage.getItem('habits')) || [];
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
