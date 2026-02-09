@@ -3,157 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Dashboard</title>
+    <title>Rad Creative Dashboard V11</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-        
         body { background-color: #09090b; color: #fafafa; font-family: 'Inter', sans-serif; }
-        
-        .bento-card { 
-            background: #18181b; 
-            border: 1px solid #27272a; 
-            border-radius: 1.5rem; 
-            padding: 1.5rem; 
-            display: flex; 
-            flex-direction: column; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-
-        .bento-card:hover { border-color: #3f3f46; }
-
-        .scroller { overflow-y: auto; max-height: 250px; }
+        .bento-card { background: #18181b; border: 1px solid #27272a; border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column; transition: all 0.3s ease; }
+        .scroller { overflow-y: auto; max-height: 350px; }
         .scroller::-webkit-scrollbar { width: 4px; }
         .scroller::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
-        
-        /* THE DARK MODE FILTER FOR CALENDAR */
-        .dark-cal {
-            filter: invert(92%) hue-rotate(180deg) brightness(105%) contrast(100%);
-            background: #ffffff; /* This helps the inversion look cleaner */
-        }
+        .dark-cal { filter: invert(92%) hue-rotate(180deg) brightness(105%) contrast(100%); background: #ffffff; }
+        /* Mini Heatmap Squares */
+        .day-sq { width: 8px; height: 8px; border-radius: 2px; background: #27272a; }
+        .day-sq.active { background: #22c55e; box-shadow: 0 0 8px #22c55e44; }
     </style>
 </head>
 <body class="p-4 md:p-8 min-h-screen flex items-center justify-center">
 
     <div class="w-full max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-4">
         
-        <div class="md:col-span-2 md:row-span-2 bento-card p-0 overflow-hidden relative group min-h-[350px]">
-            <iframe 
-                src="https://www.youtube-nocookie.com/embed/DUzQadS3aJ0?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0" 
-                title="YouTube video player"
-                class="absolute inset-0 w-full h-full"
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
+        <div class="md:col-span-2 md:row-span-2 bento-card p-0 overflow-hidden relative min-h-[350px]">
+            <iframe src="https://www.youtube-nocookie.com/embed/DUzQadS3aJ0?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0" class="absolute inset-0 w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
 
-        <div class="md:col-span-2 bento-card flex flex-col justify-center items-start pl-8 min-h-[180px]">
-            <h1 id="clock" class="text-6xl md:text-8xl font-extrabold tracking-tighter text-white leading-none">00:00</h1>
+        <div class="md:col-span-2 bento-card justify-center pl-8 min-h-[180px]">
+            <h1 id="clock" class="text-6xl md:text-8xl font-extrabold tracking-tighter leading-none">00:00</h1>
             <p id="date" class="text-zinc-500 text-lg font-medium uppercase tracking-[0.2em] mt-2 mb-6">Loading...</p>
-            
             <form action="https://www.google.com/search" method="GET" class="w-full max-w-md relative group">
-                <input type="text" name="q" placeholder="Search the web..." 
-                    class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-12 py-3 text-sm focus:outline-none focus:border-blue-600 transition shadow-2xl">
-                <i data-lucide="search" class="absolute left-4 top-3.5 w-4 h-4 text-zinc-600 group-focus-within:text-blue-500 transition"></i>
+                <input type="text" name="q" placeholder="Search the web..." class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-12 py-3 text-sm focus:outline-none focus:border-blue-600 transition">
+                <i data-lucide="search" class="absolute left-4 top-3.5 w-4 h-4 text-zinc-600 group-focus-within:text-blue-500"></i>
             </form>
         </div>
 
         <div class="md:col-span-1 bento-card justify-center">
-            <h3 class="text-zinc-600 font-bold text-[10px] uppercase tracking-widest mb-4">Quick Access</h3>
             <div class="grid grid-cols-1 gap-3">
-                <a href="https://slack.com" target="_blank" class="flex items-center gap-3 p-3 bg-zinc-900/50 rounded-xl hover:bg-zinc-800 hover:text-white text-zinc-400 transition text-sm font-semibold border border-zinc-800/50">
-                    <i data-lucide="message-circle" class="text-purple-400 w-5 h-5"></i> Slack
-                </a>
-                <a href="https://linkedin.com" target="_blank" class="flex items-center gap-3 p-3 bg-zinc-900/50 rounded-xl hover:bg-zinc-800 hover:text-white text-zinc-400 transition text-sm font-semibold border border-zinc-800/50">
-                    <i data-lucide="linkedin" class="text-blue-500 w-5 h-5"></i> LinkedIn
-                </a>
+                <a href="https://slack.com" target="_blank" class="flex items-center gap-3 p-3 bg-zinc-900/50 rounded-xl hover:bg-zinc-800 text-zinc-400 transition text-sm font-semibold border border-zinc-800/50"><i data-lucide="message-circle" class="text-purple-400 w-5 h-5"></i> Slack</a>
+                <a href="https://linkedin.com" target="_blank" class="flex items-center gap-3 p-3 bg-zinc-900/50 rounded-xl hover:bg-zinc-800 text-zinc-400 transition text-sm font-semibold border border-zinc-800/50"><i data-lucide="linkedin" class="text-blue-500 w-5 h-5"></i> LinkedIn</a>
             </div>
         </div>
 
-        <div class="md:col-span-1 bento-card p-0 overflow-hidden relative group min-h-[150px]">
-            <img src="https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover opacity-50 group-hover:scale-105 transition duration-1000">
-            <div class="absolute inset-0 flex items-center justify-center">
-                <span class="text-white font-bold tracking-[0.4em] uppercase text-[10px] bg-black/20 px-3 py-1 backdrop-blur-sm rounded">Rad Creative</span>
-            </div>
+        <div class="md:col-span-1 bento-card p-0 overflow-hidden relative min-h-[150px]">
+            <img src="https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover opacity-50">
         </div>
 
         <div class="md:col-span-2 bento-card">
-            <h3 class="text-zinc-600 font-bold text-[10px] uppercase tracking-widest mb-4">Daily Habits</h3>
+            <h3 class="text-zinc-600 font-bold text-[10px] uppercase tracking-widest mb-4">Habit Streaks (Last 7 Days)</h3>
             <div class="flex gap-2 mb-4">
-                <input type="text" id="habitInput" placeholder="New habit..." class="min-w-0 flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-blue-500 text-white transition">
-                <button onclick="addHabit()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 rounded-xl font-bold transition shadow-lg shadow-blue-900/20">+</button>
+                <input type="text" id="habitInput" placeholder="New habit..." class="min-w-0 flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+                <button onclick="addHabit()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 rounded-xl font-bold">+</button>
             </div>
-            <div id="habitList" class="space-y-2 scroller"></div>
+            <div id="habitList" class="space-y-4 scroller"></div>
         </div>
 
         <div class="md:col-span-2 bento-card">
-            <h3 class="text-zinc-600 font-bold text-[10px] uppercase tracking-widest mb-4">High Priority Tasks</h3>
+            <h3 class="text-zinc-600 font-bold text-[10px] uppercase tracking-widest mb-4">Tasks</h3>
             <div class="flex gap-2 mb-4">
-                <input type="text" id="taskInput" placeholder="Add task..." class="min-w-0 flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-green-600 text-white transition">
-                <button onclick="addTask()" class="bg-zinc-700 hover:bg-zinc-600 text-white px-5 rounded-xl font-bold transition shadow-lg shadow-zinc-900/20">+</button>
+                <input type="text" id="taskInput" placeholder="Add task..." class="min-w-0 flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-green-600">
+                <button onclick="addTask()" class="bg-zinc-700 hover:bg-zinc-600 text-white px-5 rounded-xl font-bold">+</button>
             </div>
             <div id="taskList" class="space-y-2 scroller"></div>
         </div>
 
         <div class="md:col-span-4 bento-card p-0 overflow-hidden h-[600px] border-zinc-800">
-            <iframe 
-                src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver" 
-                class="dark-cal"
-                width="100%" 
-                height="100%" 
-                frameborder="0" 
-                scrolling="no">
-            </iframe>
+            <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver" class="dark-cal" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
         </div>
-
     </div>
 
     <script>
+        // Clock
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+        setInterval(updateClock, 1000); updateClock();
 
-        let habits = JSON.parse(localStorage.getItem('habits')) || [];
+        // Data Management
+        let habits = JSON.parse(localStorage.getItem('habits_v2')) || [];
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-        function render() {
-            const hList = document.getElementById('habitList');
-            hList.innerHTML = habits.map((h, i) => `
-                <div class="flex justify-between items-center bg-zinc-900/30 p-3 rounded-xl border border-zinc-800/50 group hover:border-zinc-700 transition">
-                    <span onclick="toggleH(${i})" class="cursor-pointer select-none text-sm ${h.done ? 'line-through text-zinc-600' : 'text-zinc-300'}">${h.text}</span>
-                    <button onclick="delH(${i})" class="opacity-0 group-hover:opacity-100 text-red-500/50 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                </div>
-            `).join('');
+        function getTodayStr() { return new Date().toISOString().split('T')[0]; }
 
-            const tList = document.getElementById('taskList');
-            tList.innerHTML = tasks.map((t, i) => `
-                <div class="flex justify-between items-center bg-zinc-900/30 p-3 rounded-xl border border-zinc-800/50 group hover:border-zinc-700 transition">
-                    <div class="flex items-center gap-3 overflow-hidden"> 
-                        <div onclick="toggleT(${i})" class="min-w-[1rem] h-[1rem] rounded-md border border-zinc-600 cursor-pointer flex items-center justify-center ${t.done ? 'bg-green-500 border-green-500' : ''}">
+        function render() {
+            const today = getTodayStr();
+            
+            // Render Habits
+            document.getElementById('habitList').innerHTML = habits.map((h, i) => {
+                const isDoneToday = h.history.includes(today);
+                
+                // Generate 7-day heatmap
+                let heatmapHtml = '';
+                for(let d=6; d>=0; d--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - d);
+                    const dStr = date.toISOString().split('T')[0];
+                    const active = h.history.includes(dStr) ? 'active' : '';
+                    heatmapHtml += `<div class="day-sq ${active}" title="${dStr}"></div>`;
+                }
+
+                return `
+                <div class="bg-zinc-900/30 p-4 rounded-xl border border-zinc-800/50 group">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm font-medium ${isDoneToday ? 'text-zinc-500 line-through' : 'text-zinc-200'}">${h.text}</span>
+                        <div class="flex gap-2">
+                            <button onclick="toggleH(${i})" class="p-1 rounded-lg ${isDoneToday ? 'bg-green-500/20 text-green-500' : 'bg-zinc-800 text-zinc-500'} hover:scale-110 transition">
+                                <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                            </button>
+                            <button onclick="delH(${i})" class="opacity-0 group-hover:opacity-100 p-1 text-zinc-600 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                    <div class="flex gap-1.5 items-center">
+                        <span class="text-[9px] text-zinc-600 uppercase mr-2 font-bold">History</span>
+                        ${heatmapHtml}
+                    </div>
+                </div>`;
+            }).join('');
+
+            // Render Tasks
+            document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
+                <div class="flex justify-between items-center bg-zinc-900/30 p-3 rounded-xl border border-zinc-800/50 group">
+                    <div class="flex items-center gap-3 overflow-hidden" onclick="toggleT(${i})"> 
+                        <div class="min-w-[1rem] h-[1rem] rounded border border-zinc-600 flex items-center justify-center ${t.done ? 'bg-green-500 border-green-500' : ''}">
                             ${t.done ? '<i data-lucide="check" class="w-3 h-3 text-black font-bold"></i>' : ''}
                         </div>
-                        <span onclick="toggleT(${i})" class="cursor-pointer select-none text-sm truncate ${t.done ? 'line-through text-zinc-600' : 'text-zinc-300'}">${t.text}</span>
+                        <span class="text-sm truncate cursor-pointer ${t.done ? 'line-through text-zinc-600' : 'text-zinc-300'}">${t.text}</span>
                     </div>
-                    <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-500 transition ml-2"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-500 ml-2"><i data-lucide="x" class="w-4 h-4"></i></button>
                 </div>
             `).join('');
 
-            localStorage.setItem('habits', JSON.stringify(habits));
+            localStorage.setItem('habits_v2', JSON.stringify(habits));
             localStorage.setItem('tasks', JSON.stringify(tasks));
             lucide.createIcons();
         }
 
-        function addHabit() { const input = document.getElementById('habitInput'); if(input.value.trim()) { habits.push({text: input.value.trim(), done: false}); input.value=''; render(); } }
-        function addTask() { const input = document.getElementById('taskInput'); if(input.value.trim()) { tasks.push({text: input.value.trim(), done: false}); input.value=''; render(); } }
-        function toggleH(i) { habits[i].done = !habits[i].done; render(); }
-        function toggleT(i) { tasks[i].done = !tasks[i].done; render(); }
+        // Habit Logic
+        function addHabit() {
+            const input = document.getElementById('habitInput');
+            if(input.value.trim()) {
+                habits.push({ text: input.value.trim(), history: [] });
+                input.value = ''; render();
+            }
+        }
+        function toggleH(i) {
+            const today = getTodayStr();
+            const index = habits[i].history.indexOf(today);
+            if(index > -1) habits[i].history.splice(index, 1);
+            else habits[i].history.push(today);
+            render();
+        }
         function delH(i) { habits.splice(i, 1); render(); }
+
+        // Task Logic
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            if(input.value.trim()) {
+                tasks.push({ text: input.value.trim(), done: false });
+                input.value = ''; render();
+            }
+        }
+        function toggleT(i) { tasks[i].done = !tasks[i].done; render(); }
         function delT(i) { tasks.splice(i, 1); render(); }
 
         document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
