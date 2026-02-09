@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Rich-V32</title>
+    <title>Rad Creative Rich-V33</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -52,12 +52,12 @@
 
         <div class="bento-card border-[#FF8981]/20">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-[#FF8981] section-title">Gmail u/1 Portal</h3>
+                <h3 class="text-[#FF8981] section-title">Gmail Portal</h3>
                 <i data-lucide="mail" class="w-5 h-5 text-[#FF8981]"></i>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <a href="https://mail.google.com/mail/u/1/#search/label%3Aunread" target="_blank" class="bg-[#0a0a0a] border border-[#2a2a2a] p-3 rounded-xl flex items-center justify-between group hover:border-[#FF8981]/50 transition">
-                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Unread Messages</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Unread</span>
                     <i data-lucide="mail-warning" class="w-4 h-4 text-[#FF8981]"></i>
                 </a>
                 <a href="https://mail.google.com/mail/u/1/#compose" target="_blank" class="accent-bg p-3 rounded-xl flex items-center justify-between group hover:opacity-90 transition">
@@ -67,23 +67,30 @@
             </div>
         </div>
 
-        <div class="bento-card p-0 overflow-hidden relative aspect-video">
-            <iframe id="focus-video" src="https://www.youtube-nocookie.com/embed/DUzQadS3aJ0?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1" class="absolute inset-0 w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="bento-card border-[#fff1ce]/5">
+            <h3 class="text-[#fff1ce] section-title mb-4">Launch Pad</h3>
+            <div class="grid grid-cols-4 gap-4">
+                <a href="slack://open" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] transition border border-[#2a2a2a] group">
+                    <i data-lucide="message-circle" class="w-6 h-6 text-[#fff1ce] group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">Slack</span>
+                </a>
+                <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] transition border border-[#2a2a2a] group">
+                    <i data-lucide="video" class="w-6 h-6 text-[#fff1ce] group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">Jitter</span>
+                </a>
+                <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] transition border border-[#2a2a2a] group">
+                    <i data-lucide="linkedin" class="w-6 h-6 text-[#fff1ce] group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">LinkedIn</span>
+                </a>
+                <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#fff1ce]/5 rounded-2xl hover:bg-[#fff1ce]/20 text-[#fff1ce] transition border border-[#fff1ce]/20 group">
+                    <i data-lucide="sparkles" class="w-6 h-6 group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">Gemini</span>
+                </a>
+            </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-3">
-            <a href="slack://open" class="flex flex-col items-center justify-center gap-2 py-4 bg-[#1c1c1c] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] transition text-[8px] font-bold border border-[#2a2a2a] uppercase">
-                <i data-lucide="message-circle" class="w-4 h-4 text-[#fff1ce]"></i> Slack
-            </a>
-            <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-2 py-4 bg-[#1c1c1c] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] transition text-[8px] font-bold border border-[#2a2a2a] uppercase">
-                <i data-lucide="video" class="w-4 h-4 text-[#fff1ce]"></i> Jitter
-            </a>
-            <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-2 py-4 bg-[#1c1c1c] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] transition text-[8px] font-bold border border-[#2a2a2a] uppercase">
-                <i data-lucide="linkedin" class="w-4 h-4 text-[#fff1ce]"></i> LinkedIn
-            </a>
-            <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-2 py-4 bg-[#fff1ce]/10 rounded-2xl hover:bg-[#fff1ce]/20 text-[#fff1ce] transition text-[8px] font-bold border border-[#fff1ce]/20 uppercase">
-                <i data-lucide="sparkles" class="w-4 h-4"></i> Gemini
-            </a>
+        <div class="bento-card p-0 overflow-hidden relative aspect-video">
+            <iframe id="focus-video" src="https://www.youtube-nocookie.com/embed/DUzQadS3aJ0?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1" class="absolute inset-0 w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
 
         <div class="bento-card">
