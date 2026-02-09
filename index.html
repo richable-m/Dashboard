@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v40 - Focus & Audio</title>
+    <title>RCC Dash v41</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -20,10 +20,10 @@
 
         .dark-cal { filter: invert(92%) hue-rotate(180deg) brightness(105%) contrast(100%); background: #ffffff; }
         .accent-bg { background-color: var(--brand-yellow); color: #0a0a0a; }
-        .scroller { overflow-y: auto; max-height: 250px; }
+        .scroller { overflow-y: auto; max-height: 300px; }
         .scroller::-webkit-scrollbar { width: 4px; }
         .scroller::-webkit-scrollbar-thumb { background: #333333; border-radius: 10px; }
-        .day-sq { width: 10px; height: 10px; border-radius: 2px; background: #2a2a2a; transition: all 0.3s ease; }
+        .day-sq { width: 12px; height: 12px; border-radius: 3px; background: #2a2a2a; transition: all 0.3s ease; }
         .day-sq.active { background: var(--brand-yellow); box-shadow: 0 0 8px rgba(255, 241, 206, 0.4); }
         .section-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
         #video-controls { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(8px); display: none; }
@@ -62,10 +62,10 @@
                 </div>
                 <div>
                     <h4 id="pomo-label" class="brand-accent text-sm font-bold uppercase tracking-widest opacity-40">50/10 Protocol</h4>
-                    <p id="pomo-timer-display" class="brand-accent text-2xl font-bold">50:00</p>
+                    <p id="pomo-timer-display" class="brand-accent text-3xl font-bold">50:00</p>
                 </div>
             </div>
-            <button id="pomo-main-btn" onclick="togglePomo()" class="accent-bg px-10 py-3 rounded-full font-bold uppercase text-sm tracking-widest hover:scale-105 transition active:scale-95 flex items-center gap-2">
+            <button id="pomo-main-btn" onclick="togglePomo()" class="accent-bg px-12 py-4 rounded-full font-bold uppercase text-sm tracking-widest hover:scale-105 transition active:scale-95 flex items-center gap-2">
                 <i data-lucide="play" class="w-4 h-4"></i> <span>Start Cycle</span>
             </button>
         </div>
@@ -76,7 +76,7 @@
                     <h3 class="text-[#FF8981] section-title">Gmail</h3>
                     <i data-lucide="mail" class="w-5 h-5 text-[#FF8981]"></i>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-3 h-full">
                     <a href="https://mail.google.com/mail/u/1/#search/label%3Aunread" target="_blank" class="bg-[#0a0a0a] border border-[#2a2a2a] p-3 rounded-xl flex items-center justify-between group hover:border-[#FF8981]/50 transition">
                         <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Unread</span>
                         <i data-lucide="mail-warning" class="w-4 h-4 text-[#FF8981]"></i>
@@ -89,12 +89,46 @@
             </div>
             <div class="bento-card border-white/5">
                 <div class="grid grid-cols-4 gap-2 h-full">
-                    <a href="slack://open" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition"><i data-lucide="message-circle" class="w-5 h-5 text-[#fff1ce]"></i></a>
-                    <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition"><i data-lucide="video" class="w-5 h-5 text-[#fff1ce]"></i></a>
-                    <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition"><i data-lucide="linkedin" class="w-5 h-5 text-[#fff1ce]"></i></a>
-                    <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#fff1ce]/5 rounded-xl hover:bg-[#fff1ce]/20 border border-[#fff1ce]/20 transition"><i data-lucide="sparkles" class="w-5 h-5 text-[#fff1ce]"></i></a>
+                    <a href="slack://open" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition py-4">
+                        <i data-lucide="message-circle" class="w-5 h-5 text-[#fff1ce]"></i>
+                        <span class="text-[9px] uppercase font-bold tracking-tighter opacity-60">Slack</span>
+                    </a>
+                    <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition py-4">
+                        <i data-lucide="video" class="w-5 h-5 text-[#fff1ce]"></i>
+                        <span class="text-[9px] uppercase font-bold tracking-tighter opacity-60">Jitter</span>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition py-4">
+                        <i data-lucide="linkedin" class="w-5 h-5 text-[#fff1ce]"></i>
+                        <span class="text-[9px] uppercase font-bold tracking-tighter opacity-60">LinkedIn</span>
+                    </a>
+                    <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#fff1ce]/5 rounded-xl hover:bg-[#fff1ce]/20 border border-[#fff1ce]/20 transition py-4">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-[#fff1ce]"></i>
+                        <span class="text-[9px] uppercase font-bold tracking-tighter text-[#fff1ce]">Gemini</span>
+                    </a>
                 </div>
             </div>
+        </div>
+
+        <div class="bento-card">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[#fff1ce] section-title">Priority Tasks</h3>
+                <div class="flex gap-2">
+                    <input type="text" id="taskInput" placeholder="Add something rad..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#fff1ce] w-64">
+                    <button onclick="addTask()" class="accent-bg px-6 rounded-xl font-bold">+</button>
+                </div>
+            </div>
+            <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 gap-2 scroller"></div>
+        </div>
+
+        <div class="bento-card">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[#fff1ce] section-title">Habit Streaks</h3>
+                <div class="flex gap-2">
+                    <input type="text" id="habitInput" placeholder="New habit..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#fff1ce] w-64">
+                    <button onclick="addHabit()" class="accent-bg px-6 rounded-xl font-bold">+</button>
+                </div>
+            </div>
+            <div id="habitList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 scroller"></div>
         </div>
 
         <div class="bento-card p-0 overflow-hidden relative aspect-video group">
@@ -106,26 +140,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bento-card">
-                <h3 class="text-[#fff1ce] section-title mb-4">Tasks</h3>
-                <div class="flex gap-2 mb-4">
-                    <input type="text" id="taskInput" placeholder="..." class="flex-1 bg-black border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#fff1ce]">
-                    <button onclick="addTask()" class="accent-bg px-4 rounded-xl font-bold">+</button>
-                </div>
-                <div id="taskList" class="space-y-2 scroller"></div>
-            </div>
-            <div class="bento-card">
-                <h3 class="text-[#fff1ce] section-title mb-4">Habits</h3>
-                <div id="habitList" class="space-y-4 scroller"></div>
-                <div class="flex gap-2 mt-4">
-                    <input type="text" id="habitInput" placeholder="..." class="flex-1 bg-black border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#fff1ce]">
-                    <button onclick="addHabit()" class="accent-bg px-4 rounded-xl font-bold">+</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="bento-card p-0 overflow-hidden h-[400px]">
+        <div class="bento-card p-0 overflow-hidden h-[450px]">
             <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0" class="dark-cal" width="100%" height="100%" frameborder="0"></iframe>
         </div>
     </div>
@@ -136,31 +151,6 @@
         let pomoTime = 50 * 60;
         let isWorking = true;
         let isRunning = false;
-        let audioCtx;
-
-        function playChime(type) {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            if (type === 'work') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5);
-            } else {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(660, audioCtx.currentTime + 0.5);
-            }
-            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.8);
-        }
 
         function togglePomo() {
             const btn = document.getElementById('pomo-main-btn');
@@ -190,7 +180,6 @@
         function switchPomoMode() {
             isWorking = !isWorking;
             pomoTime = isWorking ? 50 * 60 : 10 * 60;
-            playChime(isWorking ? 'work' : 'break');
             updatePomoDisplay();
         }
 
@@ -212,7 +201,7 @@
             }
         }
 
-        // --- CORE UI ---
+        // --- CORE UI & STORAGE ---
         let tasks = JSON.parse(localStorage.getItem('rad_tasks')) || [];
         let habits = JSON.parse(localStorage.getItem('rad_habits')) || [];
         let player;
@@ -233,11 +222,14 @@
 
         function render() {
             const today = new Date().toISOString().split('T')[0];
+            // Task Rendering
             document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
                 <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5 group">
                     <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
                     <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
                 </div>`).join('');
+            
+            // Habit Rendering
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
                 let hMap = '';
                 for(let d=6; d>=0; d--) {
@@ -249,11 +241,12 @@
                 return `<div class="bg-black/40 p-3 rounded-xl border border-white/5 group">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs ${h.history.includes(today) ? 'text-zinc-600' : 'text-[#fffefb]'}">${h.text}</span>
-                        <div class="flex gap-2">
-                            <button onclick="toggleH(${i})" class="p-1 rounded-lg ${h.history.includes(today) ? 'bg-[#fff1ce] text-[#0a0a0a]' : 'bg-[#2a2a2a] text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
-                        </div>
-                    </div><div class="flex gap-2">${hMap}</div></div>`;
+                        <button onclick="toggleH(${i})" class="p-1 rounded-lg ${h.history.includes(today) ? 'bg-[#fff1ce] text-[#0a0a0a]' : 'bg-[#2a2a2a] text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
+                    </div>
+                    <div class="flex gap-1.5">${hMap}</div>
+                </div>`;
             }).join('');
+
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
             localStorage.setItem('rad_habits', JSON.stringify(habits));
             if (window.lucide) lucide.createIcons();
@@ -283,9 +276,13 @@
         tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
         
-        setInterval(updateUI, 60000); updateUI();
+        setInterval(updateUI, 60000); 
+        updateUI();
         const boot = () => { if (window.lucide) { render(); } else { setTimeout(boot, 50); } };
         boot();
+
+        document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
+        document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
     </script>
 </body>
 </html>
