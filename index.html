@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Dashboard V15</title>
+    <title>Rad Creative Dashboard V16</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -56,8 +56,21 @@
             </div>
         </div>
 
-        <div class="md:col-span-1 bento-card p-0 overflow-hidden relative min-h-[150px]">
-            <img src="https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover opacity-50">
+        <div class="md:col-span-1 bento-card justify-between bg-red-950/5 border-red-900/20">
+            <div>
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-red-500 font-bold text-[10px] uppercase tracking-widest">Mailbox</h3>
+                    <i data-lucide="mail" class="w-4 h-4 text-red-500/50"></i>
+                </div>
+                <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="block group">
+                    <span class="text-2xl font-bold text-white group-hover:text-red-400 transition italic tracking-tight">Open Inbox</span>
+                    <p class="text-[10px] text-zinc-500 mt-1 uppercase tracking-wider">Account (0)</p>
+                </a>
+            </div>
+            
+            <a href="https://mail.google.com/mail/u/0/#compose" target="_blank" class="mt-4 flex items-center justify-center gap-2 py-2 bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 rounded-xl text-red-500 text-xs font-bold transition">
+                <i data-lucide="pen-tool" class="w-3 h-3"></i> Quick Compose
+            </a>
         </div>
 
         <div class="md:col-span-2 bento-card">
@@ -89,7 +102,7 @@
     </div>
 
     <script>
-        // UI, Clock & Dynamic Greeting
+        // UI & Clock
         function updateUI() {
             const now = new Date();
             const hours = now.getHours();
@@ -105,7 +118,7 @@
         setInterval(updateUI, 1000);
         updateUI();
 
-        // YouTube Volume Logic (Hush to 10% after load)
+        // YouTube Volume (Hush to 10%)
         const iframe = document.getElementById('focus-video');
         iframe.onload = function() {
             setTimeout(() => {
@@ -113,15 +126,13 @@
             }, 2000);
         };
 
-        // Data Storage
+        // Storage & Logic
         let habits = JSON.parse(localStorage.getItem('habits_v2')) || [];
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         function getTodayStr() { return new Date().toISOString().split('T')[0]; }
 
         function render() {
             const today = getTodayStr();
-            
-            // Render Habits
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
                 const isDoneToday = h.history.includes(today);
                 let heatmapHtml = '';
@@ -143,7 +154,6 @@
                 </div>`;
             }).join('');
 
-            // Render Local Tasks
             document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
                 <div class="flex justify-between items-center bg-zinc-900/30 p-3 rounded-xl border border-zinc-800/50 group">
                     <div class="flex items-center gap-3 overflow-hidden" onclick="toggleT(${i})"> 
@@ -160,7 +170,6 @@
             lucide.createIcons();
         }
 
-        // Action Handlers
         function addHabit() { const input = document.getElementById('habitInput'); if(input.value.trim()) { habits.push({ text: input.value.trim(), history: [] }); input.value = ''; render(); } }
         function toggleH(i) { const today = getTodayStr(); const idx = habits[i].history.indexOf(today); if(idx > -1) habits[i].history.splice(idx, 1); else habits[i].history.push(today); render(); }
         function delH(i) { habits.splice(i, 1); render(); }
