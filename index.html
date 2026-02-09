@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v43 - Live</title>
+    <title>RCC Dash v50 - Drive Integrated</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -18,7 +18,9 @@
         .glow-work { box-shadow: inset 0 0 100px rgba(255, 137, 129, 0.25); }
         .glow-break { box-shadow: inset 0 0 100px rgba(255, 241, 206, 0.2); }
 
-        .dark-cal { filter: invert(92%) hue-rotate(180deg) brightness(105%) contrast(100%); background: #ffffff; }
+        /* DRIVE & CAL FILTERS */
+        .dark-embed { filter: invert(92%) hue-rotate(180deg) brightness(105%) contrast(100%); background: #ffffff; border-radius: 0.75rem; }
+        
         .accent-bg { background-color: var(--brand-yellow); color: #0a0a0a; }
         .scroller { overflow-y: auto; max-height: 350px; }
         .scroller::-webkit-scrollbar { width: 4px; }
@@ -118,6 +120,16 @@
             </div>
         </div>
 
+        <div class="bento-card h-[450px] border-[#fff1ce]/10">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[#fff1ce] section-title">Rad Creative Assets</h3>
+                <a href="https://drive.google.com/drive/folders/1rNaiPDpqHdKKbmdIRHWcc-oKS43Q4KAP" target="_blank" class="text-[10px] font-bold opacity-40 hover:opacity-100 transition">Open in Drive →</a>
+            </div>
+            <div class="flex-1 w-full overflow-hidden">
+                <iframe src="https://drive.google.com/embeddedfolderview?id=1rNaiPDpqHdKKbmdIRHWcc-oKS43Q4KAP#grid" class="dark-embed w-full h-full border-0" allowfullscreen></iframe>
+            </div>
+        </div>
+
         <div class="bento-card">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-[#fff1ce] section-title">Priority Tasks</h3>
@@ -141,7 +153,7 @@
         </div>
 
         <div class="bento-card p-0 overflow-hidden h-[450px]">
-            <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0" class="dark-cal" width="100%" height="100%" frameborder="0"></iframe>
+            <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0" class="dark-embed" width="100%" height="100%" frameborder="0"></iframe>
         </div>
     </div>
 
@@ -214,33 +226,22 @@
         function updateUI() {
             const now = new Date();
             const hour = now.getHours();
-            
-            // Clock & Date
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-
-            // Dynamic Greeting
-            let greet = "Good Evening";
-            if (hour < 12) greet = "Good Morning";
-            else if (hour < 18) greet = "Good Afternoon";
+            let greet = hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
             document.getElementById('greeting').innerText = `${greet}, Rich`;
         }
         
-        // --- WEATHER (Open-Meteo API) ---
         async function fetchWeather() {
             try {
-                // Fort Collins Coords: 40.5853° N, 105.0844° W
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.58&longitude=-105.08&current=temperature_2m,weather_code&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch');
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.58&longitude=-105.08&current=temperature_2m,weather_code&temperature_unit=fahrenheit');
                 const data = await res.json();
-                
                 const temp = Math.round(data.current.temperature_2m);
                 const code = data.current.weather_code;
                 const isDay = new Date().getHours() > 6 && new Date().getHours() < 20;
 
-                // Simple Weather Code Mapping
                 let desc = "Clear";
                 let icon = isDay ? "sun" : "moon";
-                
                 if (code >= 1 && code <= 3) { desc = "Partly Cloudy"; icon = isDay ? "cloud-sun" : "cloud-moon"; }
                 else if (code >= 45 && code <= 48) { desc = "Foggy"; icon = "cloud-fog"; }
                 else if (code >= 51 && code <= 67) { desc = "Rainy"; icon = "cloud-rain"; }
@@ -250,11 +251,8 @@
                 document.getElementById('weather-temp').innerText = `${temp}°F`;
                 document.getElementById('weather-desc').innerText = `${desc} · Fort Collins`;
                 document.getElementById('weather-icon').innerHTML = `<i data-lucide="${icon}" class="w-8 h-8"></i>`;
-                
                 if (window.lucide) lucide.createIcons();
-            } catch (e) {
-                console.error("Weather fetch failed", e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         function render() {
@@ -269,8 +267,7 @@
                 for(let d=6; d>=0; d--) {
                     const date = new Date(); date.setDate(date.getDate() - d);
                     const dStr = date.toISOString().split('T')[0];
-                    const act = h.history.includes(dStr) ? 'active' : '';
-                    hMap += `<div class="day-sq ${act}"></div>`;
+                    hMap += `<div class="day-sq ${h.history.includes(dStr) ? 'active' : ''}"></div>`;
                 }
                 return `<div class="bg-black/40 p-3 rounded-xl border border-white/5 group">
                     <div class="flex justify-between items-center mb-2">
@@ -283,35 +280,27 @@
             if (window.lucide) lucide.createIcons();
         }
 
-        function addTask() { const inp = document.getElementById('taskInput'); if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false, completedAt: null}); inp.value=''; render(); } }
-        function toggleT(i) { tasks[i].done = !tasks[i].done; tasks[i].completedAt = tasks[i].done ? Date.now() : null; render(); }
+        function addTask() { const inp = document.getElementById('taskInput'); if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false}); inp.value=''; render(); } }
+        function toggleT(i) { tasks[i].done = !tasks[i].done; render(); }
         function delT(i) { tasks.splice(i,1); render(); }
         function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value.trim()){ habits.push({text: inp.value.trim(), history: []}); inp.value=''; render(); } }
         function toggleH(i) { 
             const t = new Date().toISOString().split('T')[0]; 
             const idx = habits[i].history.indexOf(t); 
-            if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); 
-            render(); 
+            if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); render(); 
         }
         function toggleVideoSettings() { const p = document.getElementById('video-controls'); p.style.display = p.style.display === 'flex' ? 'none' : 'flex'; }
         function updateVideo() {
             const val = document.getElementById('videoUrlInput').value;
-            let id = val;
-            if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
-            else if (val.includes('be/')) id = val.split('be/')[1].split('?')[0];
-            if (id && player) { player.loadVideoById(id); player.setVolume(10); toggleVideoSettings(); }
+            let id = val.includes('v=') ? val.split('v=')[1].split('&')[0] : val.split('/').pop();
+            if (id && player) { player.loadVideoById(id); toggleVideoSettings(); }
         }
 
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
         
-        setInterval(updateUI, 60000); 
-        updateUI(); // Run immediately
-        
-        fetchWeather(); // Fetch immediately
-        setInterval(fetchWeather, 900000); // Fetch every 15 mins
-        
+        setInterval(updateUI, 60000); updateUI(); fetchWeather(); setInterval(fetchWeather, 900000);
         const boot = () => { if (window.lucide) { render(); } else { setTimeout(boot, 50); } };
         boot();
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
