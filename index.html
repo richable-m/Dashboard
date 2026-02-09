@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v34</title>
+    <title>RCC Dash v35</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -84,7 +84,7 @@
         </div>
 
         <div class="bento-card p-0 overflow-hidden relative aspect-video group">
-            <iframe id="focus-video" src="https://www.youtube-nocookie.com/embed/DUzQadS3aJ0?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1" class="absolute inset-0 w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div id="focus-video" class="absolute inset-0 w-full h-full"></div>
             <button onclick="toggleVideoSettings()" class="absolute top-4 right-4 z-20 bg-black/50 p-2 rounded-full opacity-0 group-hover:opacity-100 transition"><i data-lucide="settings" class="w-4 h-4 text-white"></i></button>
             <div id="video-controls" class="absolute inset-0 z-30 flex flex-col items-center justify-center p-8 text-center">
                 <h3 class="brand-accent text-sm mb-4">Change Focus Video</h3>
@@ -127,6 +127,38 @@
         // DATA LOGIC
         let tasks = JSON.parse(localStorage.getItem('rad_tasks')) || [];
         let habits = JSON.parse(localStorage.getItem('rad_habits')) || [];
+        let player;
+
+        // LOAD YOUTUBE API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('focus-video', {
+                height: '100%',
+                width: '100%',
+                videoId: 'DUzQadS3aJ0',
+                playerVars: {
+                    'autoplay': 1,
+                    'mute': 1,
+                    'controls': 1,
+                    'modestbranding': 1,
+                    'playsinline': 1,
+                    'rel': 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.mute(); // Must start muted to autoplay
+            event.target.setVolume(10); // GURU FIX: Sets internal volume to 10%
+            event.target.playVideo();
+        }
 
         function updateUI() {
             const now = new Date();
@@ -139,21 +171,17 @@
             const twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
             const initialLength = tasks.length;
             tasks = tasks.filter(t => !t.done || !t.completedAt || t.completedAt > twelveHoursAgo);
-            // Only re-render if the list actually changed to save resources
             if (tasks.length !== initialLength) render();
         }
 
         function render() {
             const today = new Date().toISOString().split('T')[0];
-            
-            // Render Tasks
             document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
                 <div class="flex justify-between items-center bg-[#0a0a0a] p-3 rounded-xl border border-[#2a2a2a] group">
                     <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
                     <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
                 </div>`).join('');
 
-            // Render Habits
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
                 let hMap = '';
                 for(let d=6; d>=0; d--) {
@@ -174,14 +202,9 @@
             
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
             localStorage.setItem('rad_habits', JSON.stringify(habits));
-            
-            // GURU FIX 2: Defensive check for Lucide library
-            if (window.lucide) {
-                lucide.createIcons();
-            }
+            if (window.lucide) { lucide.createIcons(); }
         }
 
-        // TASK & HABIT ACTIONS
         function addTask() { 
             const inp = document.getElementById('taskInput'); 
             if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false, completedAt: null}); inp.value=''; render(); } 
@@ -198,7 +221,6 @@
         }
         function delH(i) { habits.splice(i,1); render(); }
 
-        // VIDEO ACTIONS
         function toggleVideoSettings() {
             const p = document.getElementById('video-controls'); p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
         }
@@ -207,29 +229,23 @@
             let id = val;
             if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
             else if (val.includes('be/')) id = val.split('be/')[1].split('?')[0];
-            if (id) {
-                document.getElementById('focus-video').src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1`;
+            if (id && player) {
+                player.loadVideoById(id);
+                player.setVolume(10);
                 toggleVideoSettings();
             }
         }
 
-        // INITIALIZATION
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
         document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
 
-        // GURU FIX 3: Start Clock and wait for Lucide to be ready before first render
         setInterval(updateUI, 60000); 
         updateUI(); 
 
         const boot = () => {
-            if (window.lucide) {
-                render();
-            } else {
-                setTimeout(boot, 50);
-            }
+            if (window.lucide) { render(); } else { setTimeout(boot, 50); }
         };
         boot();
     </script>
 </body>
 </html>
-
