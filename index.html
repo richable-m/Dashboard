@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v45 - Midnight Protocol</title>
+    <title>RCC Dash v46</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -13,20 +13,16 @@
         .brand-accent { font-family: 'Syne Mono', monospace; color: var(--brand-yellow); }
         .bento-card { background: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 1.25rem; padding: 1.5rem; display: flex; flex-direction: column; position: relative; transition: all 0.5s ease; z-index: 10; }
         
-        /* SCREEN GLOW */
         #screen-glow { position: fixed; inset: 0; pointer-events: none; transition: box-shadow 1s ease; z-index: 5; }
         .glow-work { box-shadow: inset 0 0 100px rgba(255, 137, 129, 0.25); }
         .glow-break { box-shadow: inset 0 0 100px rgba(255, 241, 206, 0.2); }
 
-        .dark-cal { filter: invert(92%) hue-rotate(180deg) brightness(105%) contrast(100%); background: #ffffff; }
+        .dark-iframe { filter: invert(90%) hue-rotate(180deg) contrast(110%); background: #fff; border-radius: 0.75rem; }
         .accent-bg { background-color: var(--brand-yellow); color: #0a0a0a; }
         .scroller { overflow-y: auto; max-height: 350px; }
-        .scroller::-webkit-scrollbar { width: 4px; }
-        .scroller::-webkit-scrollbar-thumb { background: #333333; border-radius: 10px; }
-        .day-sq { width: 12px; height: 12px; border-radius: 3px; background: #2a2a2a; transition: all 0.3s ease; }
+        .day-sq { width: 12px; height: 12px; border-radius: 3px; background: #2a2a2a; }
         .day-sq.active { background: var(--brand-yellow); box-shadow: 0 0 8px rgba(255, 241, 206, 0.4); }
         .section-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
-        #video-controls { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(8px); display: none; }
         
         @keyframes subtlePulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
         .pomo-running { animation: subtlePulse 3s infinite; }
@@ -42,7 +38,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center w-full px-2 gap-4">
                 <div class="flex-1 text-left">
                     <p id="greeting" class="brand-accent text-3xl font-bold uppercase tracking-tighter">...</p>
-                    <p id="date" class="brand-accent text-xs opacity-60 uppercase tracking-widest mt-1">Date Loading...</p>
+                    <p id="date" class="brand-accent text-xs opacity-60 uppercase tracking-widest mt-1">...</p>
                 </div>
                 <div class="flex-none"><h1 id="clock" class="brand-accent text-7xl font-bold tracking-tighter leading-none">00:00</h1></div>
                 <div class="flex-1 text-right">
@@ -50,24 +46,19 @@
                         <div id="weather-icon"><i data-lucide="cloud" class="w-8 h-8"></i></div>
                         <span id="weather-temp" class="brand-accent text-3xl font-bold">--°F</span>
                     </div>
-                    <p id="weather-desc" class="brand-accent text-xs opacity-60 uppercase tracking-widest mt-1">Loading Weather...</p>
                 </div>
             </div>
         </div>
 
-        <div id="pomo-card" class="bento-card flex-row items-center justify-between py-4 px-8 border-white/5 transition">
+        <div id="pomo-card" class="bento-card flex-row items-center justify-between py-4 px-8 border-white/5">
             <div class="flex items-center gap-4">
-                <div id="pomo-status-icon" class="p-2 rounded-full bg-white/5 text-[#fff1ce]">
-                    <i data-lucide="timer" class="w-6 h-6"></i>
-                </div>
+                <div id="pomo-status-icon" class="p-2 rounded-full bg-white/5 text-[#fff1ce]"><i data-lucide="timer" class="w-6 h-6"></i></div>
                 <div>
                     <h4 id="pomo-label" class="brand-accent text-sm font-bold uppercase tracking-widest opacity-40">50/10 Protocol</h4>
                     <p id="pomo-timer-display" class="brand-accent text-3xl font-bold">50:00</p>
                 </div>
             </div>
-            <button id="pomo-main-btn" onclick="togglePomo()" class="accent-bg px-12 py-4 rounded-full font-bold uppercase text-sm tracking-widest hover:scale-105 transition active:scale-95 flex items-center gap-2">
-                <i data-lucide="play" class="w-4 h-4"></i> <span>Start Cycle</span>
-            </button>
+            <button id="pomo-main-btn" onclick="togglePomo()" class="accent-bg px-12 py-4 rounded-full font-bold uppercase text-sm tracking-widest hover:scale-105 transition active:scale-95">Start Cycle</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -76,284 +67,121 @@
                     <h3 class="text-[#FF8981] section-title">Gmail</h3>
                     <i data-lucide="mail" class="w-5 h-5 text-[#FF8981]"></i>
                 </div>
-                <div class="grid grid-cols-2 gap-3 h-full">
+                <div class="grid grid-cols-2 gap-3">
                     <a href="https://mail.google.com/mail/u/1/#search/label%3Aunread" target="_blank" class="bg-[#0a0a0a] border border-[#2a2a2a] p-3 rounded-xl flex items-center justify-between group hover:border-[#FF8981]/50 transition">
-                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Unread</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest">Unread</span>
                         <i data-lucide="mail-warning" class="w-4 h-4 text-[#FF8981]"></i>
                     </a>
-                    <a href="https://mail.google.com/mail/u/1/#compose" target="_blank" class="accent-bg p-3 rounded-xl flex items-center justify-between hover:opacity-90 transition">
+                    <a href="https://mail.google.com/mail/u/1/#compose" target="_blank" class="accent-bg p-3 rounded-xl flex items-center justify-between">
                         <span class="text-[10px] font-bold uppercase tracking-widest">Compose</span>
                         <i data-lucide="pen-tool" class="w-4 h-4"></i>
                     </a>
                 </div>
             </div>
             <div class="bento-card border-white/5">
-                <div class="grid grid-cols-4 gap-2 h-full">
-                    <a href="slack://open" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition py-4">
-                        <i data-lucide="message-circle" class="w-5 h-5 text-[#fff1ce]"></i>
-                        <span class="text-[9px] uppercase font-bold tracking-tighter opacity-60">Slack</span>
-                    </a>
-                    <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition py-4">
-                        <i data-lucide="video" class="w-5 h-5 text-[#fff1ce]"></i>
-                        <span class="text-[9px] uppercase font-bold tracking-tighter opacity-60">Jitter</span>
-                    </a>
-                    <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition py-4">
-                        <i data-lucide="linkedin" class="w-5 h-5 text-[#fff1ce]"></i>
-                        <span class="text-[9px] uppercase font-bold tracking-tighter opacity-60">LinkedIn</span>
-                    </a>
-                    <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#fff1ce]/5 rounded-xl hover:bg-[#fff1ce]/20 border border-[#fff1ce]/20 transition py-4">
-                        <i data-lucide="sparkles" class="w-5 h-5 text-[#fff1ce]"></i>
-                        <span class="text-[9px] uppercase font-bold tracking-tighter text-[#fff1ce]">Gemini</span>
-                    </a>
+                <div class="grid grid-cols-4 gap-2">
+                    <a href="slack://open" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl border border-[#2a2a2a] py-4"><i data-lucide="message-circle" class="w-5 h-5 text-[#fff1ce]"></i><span class="text-[9px] uppercase font-bold opacity-60">Slack</span></a>
+                    <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl border border-[#2a2a2a] py-4"><i data-lucide="video" class="w-5 h-5 text-[#fff1ce]"></i><span class="text-[9px] uppercase font-bold opacity-60">Jitter</span></a>
+                    <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl border border-[#2a2a2a] py-4"><i data-lucide="linkedin" class="w-5 h-5 text-[#fff1ce]"></i><span class="text-[9px] uppercase font-bold opacity-60">LinkedIn</span></a>
+                    <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#fff1ce]/5 rounded-xl border border-[#fff1ce]/20 py-4"><i data-lucide="sparkles" class="w-5 h-5 text-[#fff1ce]"></i><span class="text-[9px] uppercase font-bold text-[#fff1ce]">Gemini</span></a>
                 </div>
             </div>
         </div>
 
-        <div class="bento-card p-0 overflow-hidden relative aspect-video group">
-            <div id="focus-video" class="absolute inset-0 w-full h-full"></div>
-            <button onclick="toggleVideoSettings()" class="absolute top-4 right-4 z-20 bg-black/50 p-2 rounded-full opacity-0 group-hover:opacity-100 transition"><i data-lucide="settings" class="w-4 h-4 text-white"></i></button>
-            <div id="video-controls" class="absolute inset-0 z-30 flex flex-col items-center justify-center p-8 text-center">
-                <input type="text" id="videoUrlInput" placeholder="YouTube Link..." class="bg-black border border-[#2a2a2a] rounded-xl px-4 py-2 text-white mb-2">
-                <button onclick="updateVideo()" class="accent-bg px-4 py-2 rounded-xl font-bold text-xs uppercase">Update</button>
-            </div>
-        </div>
-
-        <div class="bento-card border-[#fff1ce]/20">
+        <div class="bento-card border-[#fff1ce]/20 min-h-[400px]">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-[#fff1ce] section-title">Drive Portal</h3>
-                <i data-lucide="hard-drive" class="w-5 h-5 text-[#fff1ce]"></i>
+                <h3 class="text-[#fff1ce] section-title">Rad Assets Explorer</h3>
+                <a href="https://drive.google.com/drive/folders/1rNaiPDpqHdKKbmdIRHWcc-oKS43Q4KAP" target="_blank" class="text-[10px] uppercase font-bold opacity-40 hover:opacity-100 transition">Open Full Drive →</a>
             </div>
-            <a href="https://drive.google.com/drive/folders/1rNaiPDpqHdKKbmdIRHWcc-oKS43Q4KAP?usp=sharing" target="_blank" class="bg-[#0a0a0a] border border-[#2a2a2a] p-4 rounded-xl flex items-center justify-between group hover:border-[#fff1ce]/50 transition">
-                <div class="flex items-center gap-3">
-                    <div class="p-2 bg-[#fff1ce]/10 rounded-lg group-hover:bg-[#fff1ce]/20 transition">
-                        <i data-lucide="folder-open" class="w-5 h-5 text-[#fff1ce]"></i>
-                    </div>
-                    <div>
-                        <span class="block text-sm font-bold text-[#fffefb]">Active Assets Folder</span>
-                        <span class="text-[10px] uppercase tracking-widest opacity-60">Rad Creative / Shared</span>
-                    </div>
-                </div>
-                <i data-lucide="external-link" class="w-4 h-4 text-[#fff1ce] opacity-0 group-hover:opacity-100 transition"></i>
-            </a>
+            <div class="flex-1 w-full overflow-hidden rounded-xl bg-white">
+                <iframe 
+                    src="https://drive.google.com/embeddedfolderview?id=1rNaiPDpqHdKKbmdIRHWcc-oKS43Q4KAP#list" 
+                    class="w-full h-[350px] border-0 dark-iframe" 
+                    allowfullscreen>
+                </iframe>
+            </div>
         </div>
 
-        <div class="bento-card">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-[#fff1ce] section-title">Priority Tasks</h3>
-                <div class="flex gap-2">
-                    <input type="text" id="taskInput" placeholder="Add task..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#fff1ce] w-64">
-                    <button onclick="addTask()" class="accent-bg px-6 rounded-xl font-bold">+</button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bento-card">
+                <h3 class="text-[#fff1ce] section-title mb-4">Tasks</h3>
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="taskInput" placeholder="Add..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-sm w-full">
+                    <button onclick="addTask()" class="accent-bg px-4 rounded-xl font-bold">+</button>
                 </div>
+                <div id="taskList" class="scroller space-y-2"></div>
             </div>
-            <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 gap-2 scroller"></div>
-        </div>
-
-        <div class="bento-card">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-[#fff1ce] section-title">Habit Streaks</h3>
-                <div class="flex gap-2">
-                    <input type="text" id="habitInput" placeholder="New habit..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#fff1ce] w-64">
-                    <button onclick="addHabit()" class="accent-bg px-6 rounded-xl font-bold">+</button>
+            <div class="bento-card">
+                <h3 class="text-[#fff1ce] section-title mb-4">Habits</h3>
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="habitInput" placeholder="Add..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-sm w-full">
+                    <button onclick="addHabit()" class="accent-bg px-4 rounded-xl font-bold">+</button>
                 </div>
+                <div id="habitList" class="scroller space-y-2"></div>
             </div>
-            <div id="habitList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 scroller"></div>
         </div>
 
         <div class="bento-card p-0 overflow-hidden h-[450px]">
-            <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0" class="dark-cal" width="100%" height="100%" frameborder="0"></iframe>
+            <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0" class="dark-iframe" width="100%" height="100%" frameborder="0"></iframe>
         </div>
     </div>
 
     <script>
-        // --- HELPERS ---
-        // Force local Date string (YYYY-MM-DD) to fix timezone reset bugs
+        // Core Logic (Midnight Reset & State)
         function getLocalISODate() {
             const d = new Date();
             const offset = d.getTimezoneOffset() * 60000; 
             return new Date(d.getTime() - offset).toISOString().split('T')[0];
         }
 
-        // --- TIMER LOGIC ---
-        let pomoInterval;
-        let pomoTime = 50 * 60;
-        let isWorking = true;
-        let isRunning = false;
-
-        function togglePomo() {
-            const btn = document.getElementById('pomo-main-btn');
-            const card = document.getElementById('pomo-card');
-            const glow = document.getElementById('screen-glow');
-            if (isRunning) {
-                clearInterval(pomoInterval);
-                isRunning = false;
-                btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> <span>Resume</span>`;
-                card.classList.remove('pomo-running');
-                glow.className = '';
-            } else {
-                isRunning = true;
-                btn.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i> <span>Pause</span>`;
-                card.classList.add('pomo-running');
-                pomoInterval = setInterval(() => {
-                    pomoTime--;
-                    updatePomoDisplay();
-                    if (pomoTime <= 0) switchPomoMode();
-                }, 1000);
-            }
-            if (window.lucide) lucide.createIcons();
-            updatePomoDisplay();
-        }
-
-        function switchPomoMode() {
-            isWorking = !isWorking;
-            pomoTime = isWorking ? 50 * 60 : 10 * 60;
-            updatePomoDisplay();
-        }
-
-        function updatePomoDisplay() {
-            const timerTxt = document.getElementById('pomo-timer-display');
-            const labelTxt = document.getElementById('pomo-label');
-            const glow = document.getElementById('screen-glow');
-            const card = document.getElementById('pomo-card');
-            const m = Math.floor(pomoTime / 60).toString().padStart(2, '0');
-            const s = (pomoTime % 60).toString().padStart(2, '0');
-            timerTxt.innerText = `${m}:${s}`;
-            if (isRunning) {
-                labelTxt.innerText = isWorking ? 'Deep Work Phase' : 'Recharge Phase';
-                labelTxt.style.color = isWorking ? "var(--brand-red)" : "var(--brand-yellow)";
-                glow.className = isWorking ? 'glow-work' : 'glow-break';
-                card.style.borderColor = isWorking ? "var(--brand-red)" : "var(--brand-yellow)";
-            }
-        }
-
-        // --- DATA & UI ---
         let tasks = JSON.parse(localStorage.getItem('rad_tasks')) || [];
         let habits = JSON.parse(localStorage.getItem('rad_habits')) || [];
-        let lastRenderDate = getLocalISODate(); // Track date for auto-reset
-        let player;
+        let lastRenderDate = getLocalISODate();
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('focus-video', {
-                height: '100%', width: '100%', videoId: 'DUzQadS3aJ0',
-                playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 1, 'modestbranding': 1, 'playsinline': 1 },
-                events: { 'onReady': (e) => { e.target.mute(); e.target.setVolume(10); e.target.playVideo(); }}
-            });
-        }
+        // Pomo & UI logic
+        let pomoTime = 50 * 60; let isWorking = true; let isRunning = false; let pomoInterval;
 
         function updateUI() {
             const now = new Date();
-            const hour = now.getHours();
-            
-            // Clock & Date
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-
-            // Dynamic Greeting
-            let greet = "Good Evening";
-            if (hour < 12) greet = "Good Morning";
-            else if (hour < 18) greet = "Good Afternoon";
-            document.getElementById('greeting').innerText = `${greet}, Rich`;
-
-            // MIDNIGHT WATCHER: Check if day changed since last render
+            
             const currentIso = getLocalISODate();
-            if (currentIso !== lastRenderDate) {
-                lastRenderDate = currentIso;
-                console.log("Midnight Refresh Triggered");
-                render(); // Re-render to clear checkboxes for the new day
-            }
+            if (currentIso !== lastRenderDate) { lastRenderDate = currentIso; render(); }
         }
 
-        // --- WEATHER ---
-        async function fetchWeather() {
-            try {
-                // Fort Collins
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.58&longitude=-105.08&current=temperature_2m,weather_code&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch');
-                const data = await res.json();
-                
-                const temp = Math.round(data.current.temperature_2m);
-                const code = data.current.weather_code;
-                const isDay = new Date().getHours() > 6 && new Date().getHours() < 20;
+        function togglePomo() {
+            const btn = document.getElementById('pomo-main-btn');
+            if (isRunning) { clearInterval(pomoInterval); isRunning = false; btn.innerText = "Resume"; } 
+            else { isRunning = true; btn.innerText = "Pause"; pomoInterval = setInterval(() => { pomoTime--; updatePomo(); if (pomoTime <= 0) { isWorking = !isWorking; pomoTime = isWorking ? 50*60 : 10*60; } }, 1000); }
+        }
 
-                let desc = "Clear";
-                let icon = isDay ? "sun" : "moon";
-                if (code >= 1 && code <= 3) { desc = "Partly Cloudy"; icon = isDay ? "cloud-sun" : "cloud-moon"; }
-                else if (code >= 45 && code <= 48) { desc = "Foggy"; icon = "cloud-fog"; }
-                else if (code >= 51 && code <= 67) { desc = "Rainy"; icon = "cloud-rain"; }
-                else if (code >= 71 && code <= 86) { desc = "Snowy"; icon = "snowflake"; }
-                else if (code >= 95) { desc = "Stormy"; icon = "cloud-lightning"; }
-
-                document.getElementById('weather-temp').innerText = `${temp}°F`;
-                document.getElementById('weather-desc').innerText = `${desc} · Fort Collins`;
-                document.getElementById('weather-icon').innerHTML = `<i data-lucide="${icon}" class="w-8 h-8"></i>`;
-                
-                if (window.lucide) lucide.createIcons();
-            } catch (e) { console.error("Weather Error", e); }
+        function updatePomo() {
+            const m = Math.floor(pomoTime / 60).toString().padStart(2, '0');
+            const s = (pomoTime % 60).toString().padStart(2, '0');
+            document.getElementById('pomo-timer-display').innerText = `${m}:${s}`;
         }
 
         function render() {
-            const today = getLocalISODate(); // Always use local date
-            document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
-                <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5 group">
-                    <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
-                    <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
-                </div>`).join('');
+            const today = getLocalISODate();
+            document.getElementById('taskList').innerHTML = tasks.map((t, i) => `<div class="flex justify-between bg-black/40 p-2 rounded-xl text-xs"><span class="${t.done ? 'line-through opacity-40' : ''}" onclick="toggleT(${i})">${t.text}</span><button onclick="delT(${i})">×</button></div>`).join('');
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
-                let hMap = '';
-                // Visualize last 7 days relative to TODAY
-                for(let d=6; d>=0; d--) {
-                    const date = new Date(); 
-                    // Adjust for local timezone safety in loop
-                    const offset = date.getTimezoneOffset() * 60000;
-                    const localDate = new Date(date.getTime() - offset);
-                    localDate.setDate(localDate.getDate() - d);
-                    
-                    const dStr = localDate.toISOString().split('T')[0];
-                    const act = h.history.includes(dStr) ? 'active' : '';
-                    hMap += `<div class="day-sq ${act}"></div>`;
-                }
-                const isDoneToday = h.history.includes(today);
-                return `<div class="bg-black/40 p-3 rounded-xl border border-white/5 group">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs ${isDoneToday ? 'text-zinc-600' : 'text-[#fffefb]'}">${h.text}</span>
-                        <button onclick="toggleH(${i})" class="p-1 rounded-lg ${isDoneToday ? 'bg-[#fff1ce] text-[#0a0a0a]' : 'bg-[#2a2a2a] text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
-                    </div><div class="flex gap-1.5">${hMap}</div></div>`;
+                const isDone = h.history.includes(today);
+                return `<div class="bg-black/40 p-2 rounded-xl flex justify-between items-center text-xs"><span>${h.text}</span><button onclick="toggleH(${i})" class="p-1 rounded ${isDone ? 'accent-bg' : 'bg-white/10'}"><i data-lucide="check" class="w-3 h-3"></i></button></div>`
             }).join('');
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
             localStorage.setItem('rad_habits', JSON.stringify(habits));
             if (window.lucide) lucide.createIcons();
         }
 
-        function addTask() { const inp = document.getElementById('taskInput'); if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false, completedAt: null}); inp.value=''; render(); } }
-        function toggleT(i) { tasks[i].done = !tasks[i].done; tasks[i].completedAt = tasks[i].done ? Date.now() : null; render(); }
+        function addTask() { const inp = document.getElementById('taskInput'); if(inp.value){ tasks.push({text: inp.value, done: false}); inp.value=''; render(); } }
+        function toggleT(i) { tasks[i].done = !tasks[i].done; render(); }
         function delT(i) { tasks.splice(i,1); render(); }
-        function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value.trim()){ habits.push({text: inp.value.trim(), history: []}); inp.value=''; render(); } }
-        function toggleH(i) { 
-            const t = getLocalISODate(); // Use safe local date
-            const idx = habits[i].history.indexOf(t); 
-            if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); 
-            render(); 
-        }
-        function toggleVideoSettings() { const p = document.getElementById('video-controls'); p.style.display = p.style.display === 'flex' ? 'none' : 'flex'; }
-        function updateVideo() {
-            const val = document.getElementById('videoUrlInput').value;
-            let id = val;
-            if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
-            else if (val.includes('be/')) id = val.split('be/')[1].split('?')[0];
-            if (id && player) { player.loadVideoById(id); player.setVolume(10); toggleVideoSettings(); }
-        }
+        function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value){ habits.push({text: inp.value, history: []}); inp.value=''; render(); } }
+        function toggleH(i) { const t = getLocalISODate(); const idx = habits[i].history.indexOf(t); if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); render(); }
 
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.head.appendChild(tag);
-        
-        setInterval(updateUI, 1000); // Check every second for clock/midnight reset
-        updateUI();
-        
-        // WEATHER INIT
-        fetchWeather(); 
-        setInterval(fetchWeather, 900000); // 15 mins
-        
-        const boot = () => { if (window.lucide) { render(); } else { setTimeout(boot, 50); } };
-        boot();
+        setInterval(updateUI, 1000);
+        updateUI(); render();
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
         document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
     </script>
