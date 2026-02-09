@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v34 - Focus Mode</title>
+    <title>RCC Dash v36</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -77,4 +77,241 @@
         </div>
 
         <div class="bento-card border-[#fff1ce]/5">
-            <h3 class
+            <h3 class="text-[#fff1ce] section-title mb-4">Launch Pad</h3>
+            <div class="grid grid-cols-4 gap-4">
+                <a href="slack://open" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] border border-[#2a2a2a] transition">
+                    <i data-lucide="message-circle" class="w-6 h-6 text-[#fff1ce]"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">Slack</span>
+                </a>
+                <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] border border-[#2a2a2a] transition">
+                    <i data-lucide="video" class="w-6 h-6 text-[#fff1ce]"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">Jitter</span>
+                </a>
+                <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] border border-[#2a2a2a] transition">
+                    <i data-lucide="linkedin" class="w-6 h-6 text-[#fff1ce]"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">LinkedIn</span>
+                </a>
+                <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#fff1ce]/5 rounded-2xl hover:bg-[#fff1ce]/20 text-[#fff1ce] border border-[#fff1ce]/20 transition">
+                    <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">Gemini</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="bento-card p-0 overflow-hidden relative aspect-video group">
+            <div id="focus-video" class="absolute inset-0 w-full h-full"></div>
+            <button onclick="toggleVideoSettings()" class="absolute top-4 right-4 z-20 bg-black/50 p-2 rounded-full opacity-0 group-hover:opacity-100 transition"><i data-lucide="settings" class="w-4 h-4 text-white"></i></button>
+            <div id="video-controls" class="absolute inset-0 z-30 flex flex-col items-center justify-center p-8 text-center">
+                <h3 class="brand-accent text-sm mb-4">Change Focus Video</h3>
+                <div class="flex gap-2 w-full max-w-md">
+                    <input type="text" id="videoUrlInput" placeholder="Paste YouTube Link..." class="flex-1 bg-black border border-[#2a2a2a] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#fff1ce]">
+                    <button onclick="updateVideo()" class="accent-bg px-4 py-2 rounded-xl font-bold text-xs uppercase">Update</button>
+                </div>
+                <button onclick="toggleVideoSettings()" class="mt-4 text-[10px] uppercase opacity-50 hover:opacity-100 tracking-widest">Cancel</button>
+            </div>
+        </div>
+
+        <div class="bento-card">
+            <h3 class="text-[#fff1ce] section-title mb-4">Priority Tasks</h3>
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="taskInput" placeholder="Add task..." class="flex-1 bg-[#0a0a0a] border border-[#2a2a2a] rounded-xl px-4 py-2 text-sm text-[#fffefb] focus:outline-none focus:border-[#fff1ce]">
+                <button onclick="addTask()" class="accent-bg text-[#0a0a0a] px-5 rounded-xl font-bold">+</button>
+            </div>
+            <div id="taskList" class="space-y-2 scroller"></div>
+        </div>
+
+        <div class="bento-card">
+            <h3 class="text-[#fff1ce] section-title mb-4">Habit Streaks</h3>
+            <div id="habitList" class="space-y-4 scroller"></div>
+            <div class="flex gap-2 mt-4">
+                <input type="text" id="habitInput" placeholder="New habit..." class="flex-1 bg-[#0a0a0a] border border-[#2a2a2a] rounded-xl px-4 py-2 text-sm text-[#fffefb] focus:outline-none focus:border-[#fff1ce]">
+                <button onclick="addHabit()" class="accent-bg text-[#0a0a0a] px-5 rounded-xl font-bold">+</button>
+            </div>
+        </div>
+
+        <div class="bento-card p-0 overflow-hidden h-[500px]">
+            <div class="p-4 border-b border-[#2a2a2a] bg-[#1c1c1c] flex justify-between items-center">
+                <h3 class="text-[#fffefb] section-title opacity-60">Schedule</h3>
+                <a href="https://tasks.google.com/u/0/canvas" target="_blank" class="brand-accent text-xs font-bold border-2 border-[#fff1ce] px-6 py-2 rounded-full uppercase hover:bg-[#fff1ce] hover:text-[#0a0a0a] transition-all">Google Tasks Portal</a>
+            </div>
+            <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0" class="dark-cal" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // --- POMODORO LOGIC (50/10) ---
+        let pomoInterval;
+        let pomoTime = 50 * 60; // 50 minutes in seconds
+        let isWorking = true;   // true = Work (50), false = Break (10)
+        let isRunning = false;
+
+        function togglePomo() {
+            const btn = document.getElementById('pomo-btn');
+            const card = document.getElementById('header-card');
+
+            if (isRunning) {
+                // STOP
+                clearInterval(pomoInterval);
+                isRunning = false;
+                btn.innerHTML = `<i data-lucide="play" class="w-3 h-3"></i> <span>Resume</span>`;
+                lucide.createIcons();
+                card.classList.remove('pomo-active'); // Stop pulsing text
+            } else {
+                // START
+                isRunning = true;
+                btn.classList.add('pomo-active'); // Pulse text
+                pomoInterval = setInterval(() => {
+                    pomoTime--;
+                    updatePomoDisplay();
+                    if (pomoTime <= 0) switchPomoMode();
+                }, 1000);
+                updatePomoDisplay(); // Immediate update
+            }
+        }
+
+        function switchPomoMode() {
+            isWorking = !isWorking;
+            pomoTime = isWorking ? 50 * 60 : 10 * 60;
+            // Play a subtle sound? (Optional)
+            updatePomoDisplay();
+        }
+
+        function updatePomoDisplay() {
+            const btn = document.getElementById('pomo-btn');
+            const card = document.getElementById('header-card');
+            
+            const m = Math.floor(pomoTime / 60).toString().padStart(2, '0');
+            const s = (pomoTime % 60).toString().padStart(2, '0');
+            
+            // Icon changes based on mode
+            const icon = isWorking ? 'zap' : 'coffee';
+            const label = isWorking ? 'Deep Work' : 'Recharge';
+            
+            btn.innerHTML = `<i data-lucide="${icon}" class="w-3 h-3"></i> <span>${label} ${m}:${s}</span>`;
+            
+            // Border Color Logic
+            if (isWorking) {
+                card.classList.add('mode-work');
+                card.classList.remove('mode-break');
+            } else {
+                card.classList.add('mode-break');
+                card.classList.remove('mode-work');
+            }
+            lucide.createIcons();
+        }
+
+        // --- DATA & UI LOGIC ---
+        let tasks = JSON.parse(localStorage.getItem('rad_tasks')) || [];
+        let habits = JSON.parse(localStorage.getItem('rad_habits')) || [];
+        let player;
+
+        // LOAD YOUTUBE API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('focus-video', {
+                height: '100%',
+                width: '100%',
+                videoId: 'DUzQadS3aJ0', // Lofi Girl or similar
+                playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 1, 'modestbranding': 1, 'playsinline': 1, 'rel': 0 },
+                events: { 'onReady': onPlayerReady }
+            });
+        }
+        function onPlayerReady(event) {
+            event.target.mute();
+            event.target.setVolume(10); // 10% Volume
+            event.target.playVideo();
+        }
+
+        function updateUI() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+            cleanOldTasks();
+        }
+
+        function cleanOldTasks() {
+            const twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
+            const initialLength = tasks.length;
+            tasks = tasks.filter(t => !t.done || !t.completedAt || t.completedAt > twelveHoursAgo);
+            if (tasks.length !== initialLength) render();
+        }
+
+        function render() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
+                <div class="flex justify-between items-center bg-[#0a0a0a] p-3 rounded-xl border border-[#2a2a2a] group">
+                    <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
+                    <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>`).join('');
+
+            document.getElementById('habitList').innerHTML = habits.map((h, i) => {
+                let hMap = '';
+                for(let d=6; d>=0; d--) {
+                    const date = new Date(); date.setDate(date.getDate() - d);
+                    const dStr = date.toISOString().split('T')[0];
+                    const act = h.history.includes(dStr) ? 'active' : '';
+                    hMap += `<div class="day-sq ${act}"></div>`;
+                }
+                return `<div class="bg-[#0a0a0a] p-3 rounded-xl border border-[#2a2a2a] group">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs ${h.history.includes(today) ? 'text-zinc-600' : 'text-[#fffefb]'}">${h.text}</span>
+                        <div class="flex gap-2">
+                            <button onclick="toggleH(${i})" class="p-1 rounded-lg ${h.history.includes(today) ? 'bg-[#fff1ce] text-[#0a0a0a]' : 'bg-[#2a2a2a] text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
+                            <button onclick="delH(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        </div>
+                    </div><div class="flex gap-2">${hMap}</div></div>`;
+            }).join('');
+            
+            localStorage.setItem('rad_tasks', JSON.stringify(tasks));
+            localStorage.setItem('rad_habits', JSON.stringify(habits));
+            if (window.lucide) { lucide.createIcons(); }
+        }
+
+        function addTask() { 
+            const inp = document.getElementById('taskInput'); 
+            if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false, completedAt: null}); inp.value=''; render(); } 
+        }
+        function toggleT(i) { tasks[i].done = !tasks[i].done; tasks[i].completedAt = tasks[i].done ? Date.now() : null; render(); }
+        function delT(i) { tasks.splice(i,1); render(); }
+        function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value.trim()){ habits.push({text: inp.value.trim(), history: []}); inp.value=''; render(); } }
+        function toggleH(i) { 
+            const t = new Date().toISOString().split('T')[0]; 
+            const idx = habits[i].history.indexOf(t); 
+            if(idx > -1) habits[i].history.splice(idx,1); 
+            else habits[i].history.push(t); 
+            render(); 
+        }
+        function delH(i) { habits.splice(i,1); render(); }
+
+        function toggleVideoSettings() {
+            const p = document.getElementById('video-controls'); p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+        }
+        function updateVideo() {
+            const val = document.getElementById('videoUrlInput').value;
+            let id = val;
+            if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
+            else if (val.includes('be/')) id = val.split('be/')[1].split('?')[0];
+            if (id && player) {
+                player.loadVideoById(id);
+                player.setVolume(10);
+                toggleVideoSettings();
+            }
+        }
+
+        document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
+        document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
+
+        setInterval(updateUI, 60000); 
+        updateUI(); 
+
+        const boot = () => {
+            if (window.lucide) { render(); } else { setTimeout(boot, 50); }
+        };
+        boot();
+    </script>
+</body>
+</html>
