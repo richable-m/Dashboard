@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v50 - Drive Integrated</title>
+    <title>RCC Dash v50</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -132,7 +132,12 @@
 
         <div class="bento-card">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-[#fff1ce] section-title">Priority Tasks</h3>
+                <div class="flex items-center gap-4">
+                    <h3 class="text-[#fff1ce] section-title">Priority Tasks</h3>
+                    <a href="https://tasks.google.com" target="_blank" class="border border-white/10 hover:border-[#fff1ce]/40 px-3 py-1 rounded-full text-[9px] uppercase font-bold tracking-widest opacity-60 hover:opacity-100 transition flex items-center gap-1.5">
+                        <i data-lucide="external-link" class="w-3 h-3"></i> View All
+                    </a>
+                </div>
                 <div class="flex gap-2">
                     <input type="text" id="taskInput" placeholder="Add task..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#fff1ce] w-64">
                     <button onclick="addTask()" class="accent-bg px-6 rounded-xl font-bold">+</button>
@@ -215,13 +220,11 @@
         let habits = JSON.parse(localStorage.getItem('rad_habits')) || [];
         let player;
         
-        // AUTO-REFRESH LOGIC: Track the date the dashboard was opened
         let currentOpenDate = new Date().toLocaleDateString();
 
         function checkDateChange() {
             const now = new Date().toLocaleDateString();
             if (now !== currentOpenDate) {
-                console.log("Date changed! Refreshing dashboard...");
                 window.location.reload();
             }
         }
@@ -241,8 +244,6 @@
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
             let greet = hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
             document.getElementById('greeting').innerText = `${greet}, Rich`;
-            
-            // Trigger the midnight check every time the clock updates
             checkDateChange();
         }
         
@@ -314,12 +315,10 @@
         tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
         
-        // Update clock every minute and check for date change
         setInterval(updateUI, 60000); 
         updateUI(); 
         fetchWeather(); 
         setInterval(fetchWeather, 900000);
-        
         const boot = () => { if (window.lucide) { render(); } else { setTimeout(boot, 50); } };
         boot();
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
