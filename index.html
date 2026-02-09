@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v42</title>
+    <title>RCC Dash v43 - Live</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -41,16 +41,16 @@
         <div id="header-card" class="bento-card text-center gap-2 border-[#fff1ce]/10">
             <div class="flex flex-col md:flex-row justify-between items-center w-full px-2 gap-4">
                 <div class="flex-1 text-left">
-                    <p class="brand-accent text-3xl font-bold uppercase tracking-tighter">Good Evening, Rich</p>
+                    <p id="greeting" class="brand-accent text-3xl font-bold uppercase tracking-tighter">...</p>
                     <p id="date" class="brand-accent text-xs opacity-60 uppercase tracking-widest mt-1">Date Loading...</p>
                 </div>
                 <div class="flex-none"><h1 id="clock" class="brand-accent text-7xl font-bold tracking-tighter leading-none">00:00</h1></div>
                 <div class="flex-1 text-right">
                     <div class="flex items-center justify-end gap-2 text-[#fff1ce]">
-                        <i data-lucide="cloud-moon" class="w-8 h-8"></i>
-                        <span class="brand-accent text-3xl font-bold">48°F</span>
+                        <div id="weather-icon"><i data-lucide="cloud" class="w-8 h-8"></i></div>
+                        <span id="weather-temp" class="brand-accent text-3xl font-bold">--°F</span>
                     </div>
-                    <p class="brand-accent text-xs opacity-60 uppercase tracking-widest mt-1">Clear · Fort Collins</p>
+                    <p id="weather-desc" class="brand-accent text-xs opacity-60 uppercase tracking-widest mt-1">Loading Weather...</p>
                 </div>
             </div>
         </div>
@@ -213,8 +213,48 @@
 
         function updateUI() {
             const now = new Date();
+            const hour = now.getHours();
+            
+            // Clock & Date
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+
+            // Dynamic Greeting
+            let greet = "Good Evening";
+            if (hour < 12) greet = "Good Morning";
+            else if (hour < 18) greet = "Good Afternoon";
+            document.getElementById('greeting').innerText = `${greet}, Rich`;
+        }
+        
+        // --- WEATHER (Open-Meteo API) ---
+        async function fetchWeather() {
+            try {
+                // Fort Collins Coords: 40.5853° N, 105.0844° W
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.58&longitude=-105.08&current=temperature_2m,weather_code&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch');
+                const data = await res.json();
+                
+                const temp = Math.round(data.current.temperature_2m);
+                const code = data.current.weather_code;
+                const isDay = new Date().getHours() > 6 && new Date().getHours() < 20;
+
+                // Simple Weather Code Mapping
+                let desc = "Clear";
+                let icon = isDay ? "sun" : "moon";
+                
+                if (code >= 1 && code <= 3) { desc = "Partly Cloudy"; icon = isDay ? "cloud-sun" : "cloud-moon"; }
+                else if (code >= 45 && code <= 48) { desc = "Foggy"; icon = "cloud-fog"; }
+                else if (code >= 51 && code <= 67) { desc = "Rainy"; icon = "cloud-rain"; }
+                else if (code >= 71 && code <= 86) { desc = "Snowy"; icon = "snowflake"; }
+                else if (code >= 95) { desc = "Stormy"; icon = "cloud-lightning"; }
+
+                document.getElementById('weather-temp').innerText = `${temp}°F`;
+                document.getElementById('weather-desc').innerText = `${desc} · Fort Collins`;
+                document.getElementById('weather-icon').innerHTML = `<i data-lucide="${icon}" class="w-8 h-8"></i>`;
+                
+                if (window.lucide) lucide.createIcons();
+            } catch (e) {
+                console.error("Weather fetch failed", e);
+            }
         }
 
         function render() {
@@ -265,7 +305,13 @@
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
-        setInterval(updateUI, 60000); updateUI();
+        
+        setInterval(updateUI, 60000); 
+        updateUI(); // Run immediately
+        
+        fetchWeather(); // Fetch immediately
+        setInterval(fetchWeather, 900000); // Fetch every 15 mins
+        
         const boot = () => { if (window.lucide) { render(); } else { setTimeout(boot, 50); } };
         boot();
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
