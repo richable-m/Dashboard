@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RCC Dash v33</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Syne+Mono&display=swap');
         :root { --brand-red: #FF8981; --brand-yellow: #fff1ce; }
@@ -159,17 +159,21 @@
 
         function render() {
             const today = new Date().toISOString().split('T')[0];
+            
+            // Render Tasks
             document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
                 <div class="flex justify-between items-center bg-[#0a0a0a] p-3 rounded-xl border border-[#2a2a2a] group">
                     <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
                     <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
                 </div>`).join('');
 
+            // Render Habits
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
                 let hMap = '';
                 for(let d=6; d>=0; d--) {
                     const date = new Date(); date.setDate(date.getDate() - d);
-                    const act = h.history.includes(date.toISOString().split('T')[0]) ? 'active' : '';
+                    const dateStr = date.toISOString().split('T')[0];
+                    const act = h.history.includes(dateStr) ? 'active' : '';
                     hMap += `<div class="day-sq ${act}"></div>`;
                 }
                 return `<div class="bg-[#0a0a0a] p-3 rounded-xl border border-[#2a2a2a] group">
@@ -181,9 +185,17 @@
                         </div>
                     </div><div class="flex gap-2">${hMap}</div></div>`;
             }).join('');
+            
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
             localStorage.setItem('rad_habits', JSON.stringify(habits));
-            lucide.createIcons();
+            
+            // GURU CHECK: Safely init icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            } else {
+                // If script loads slowly, wait for it
+                window.addEventListener('load', () => lucide.createIcons());
+            }
         }
 
         function addTask() { 
@@ -193,10 +205,18 @@
         function toggleT(i) { tasks[i].done = !tasks[i].done; tasks[i].completedAt = tasks[i].done ? Date.now() : null; render(); }
         function delT(i) { tasks.splice(i,1); render(); }
         function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value.trim()){ habits.push({text: inp.value.trim(), history: []}); inp.value=''; render(); } }
-        function toggleH(i) { const t = new Date().toISOString().split('T')[0]; const idx = habits[i].history.indexOf(t); if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); render(); }
+        function toggleH(i) { 
+            const t = new Date().toISOString().split('T')[0]; 
+            const idx = habits[i].history.indexOf(t); 
+            if(idx > -1) habits[i].history.splice(idx,1); 
+            else habits[i].history.push(t); 
+            render(); 
+        }
         function delH(i) { habits.splice(i,1); render(); }
+        
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
         document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
+        
         render();
     </script>
 </body>
