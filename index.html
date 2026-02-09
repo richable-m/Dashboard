@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v44 - Drive Enabled</title>
+    <title>RCC Dash v45 - Midnight Protocol</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -165,6 +165,14 @@
     </div>
 
     <script>
+        // --- HELPERS ---
+        // Force local Date string (YYYY-MM-DD) to fix timezone reset bugs
+        function getLocalISODate() {
+            const d = new Date();
+            const offset = d.getTimezoneOffset() * 60000; 
+            return new Date(d.getTime() - offset).toISOString().split('T')[0];
+        }
+
         // --- TIMER LOGIC ---
         let pomoInterval;
         let pomoTime = 50 * 60;
@@ -220,6 +228,7 @@
         // --- DATA & UI ---
         let tasks = JSON.parse(localStorage.getItem('rad_tasks')) || [];
         let habits = JSON.parse(localStorage.getItem('rad_habits')) || [];
+        let lastRenderDate = getLocalISODate(); // Track date for auto-reset
         let player;
 
         function onYouTubeIframeAPIReady() {
@@ -243,6 +252,14 @@
             if (hour < 12) greet = "Good Morning";
             else if (hour < 18) greet = "Good Afternoon";
             document.getElementById('greeting').innerText = `${greet}, Rich`;
+
+            // MIDNIGHT WATCHER: Check if day changed since last render
+            const currentIso = getLocalISODate();
+            if (currentIso !== lastRenderDate) {
+                lastRenderDate = currentIso;
+                console.log("Midnight Refresh Triggered");
+                render(); // Re-render to clear checkboxes for the new day
+            }
         }
 
         // --- WEATHER ---
@@ -273,7 +290,7 @@
         }
 
         function render() {
-            const today = new Date().toISOString().split('T')[0];
+            const today = getLocalISODate(); // Always use local date
             document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
                 <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5 group">
                     <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
@@ -281,16 +298,23 @@
                 </div>`).join('');
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
                 let hMap = '';
+                // Visualize last 7 days relative to TODAY
                 for(let d=6; d>=0; d--) {
-                    const date = new Date(); date.setDate(date.getDate() - d);
-                    const dStr = date.toISOString().split('T')[0];
+                    const date = new Date(); 
+                    // Adjust for local timezone safety in loop
+                    const offset = date.getTimezoneOffset() * 60000;
+                    const localDate = new Date(date.getTime() - offset);
+                    localDate.setDate(localDate.getDate() - d);
+                    
+                    const dStr = localDate.toISOString().split('T')[0];
                     const act = h.history.includes(dStr) ? 'active' : '';
                     hMap += `<div class="day-sq ${act}"></div>`;
                 }
+                const isDoneToday = h.history.includes(today);
                 return `<div class="bg-black/40 p-3 rounded-xl border border-white/5 group">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs ${h.history.includes(today) ? 'text-zinc-600' : 'text-[#fffefb]'}">${h.text}</span>
-                        <button onclick="toggleH(${i})" class="p-1 rounded-lg ${h.history.includes(today) ? 'bg-[#fff1ce] text-[#0a0a0a]' : 'bg-[#2a2a2a] text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
+                        <span class="text-xs ${isDoneToday ? 'text-zinc-600' : 'text-[#fffefb]'}">${h.text}</span>
+                        <button onclick="toggleH(${i})" class="p-1 rounded-lg ${isDoneToday ? 'bg-[#fff1ce] text-[#0a0a0a]' : 'bg-[#2a2a2a] text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
                     </div><div class="flex gap-1.5">${hMap}</div></div>`;
             }).join('');
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
@@ -303,7 +327,7 @@
         function delT(i) { tasks.splice(i,1); render(); }
         function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value.trim()){ habits.push({text: inp.value.trim(), history: []}); inp.value=''; render(); } }
         function toggleH(i) { 
-            const t = new Date().toISOString().split('T')[0]; 
+            const t = getLocalISODate(); // Use safe local date
             const idx = habits[i].history.indexOf(t); 
             if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); 
             render(); 
@@ -321,7 +345,8 @@
         tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
         
-        setInterval(updateUI, 60000); updateUI();
+        setInterval(updateUI, 1000); // Check every second for clock/midnight reset
+        updateUI();
         
         // WEATHER INIT
         fetchWeather(); 
