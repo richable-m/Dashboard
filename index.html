@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Rich-V30</title>
+    <title>Rad Creative Rich-V32</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -24,11 +24,7 @@
         .scroller::-webkit-scrollbar-thumb { background: #333333; border-radius: 10px; }
         .day-sq { width: 10px; height: 10px; border-radius: 2px; background: #2a2a2a; transition: all 0.3s ease; }
         .day-sq.active { background: var(--brand-yellow); box-shadow: 0 0 8px rgba(255, 241, 206, 0.4); }
-        
-        /* Custom Red Text/Border Utilities */
-        .text-brand-red { color: var(--brand-red); }
-        .border-brand-red { border-color: rgba(255, 137, 129, 0.2); }
-        .hover-border-brand-red:hover { border-color: rgba(255, 137, 129, 0.5); }
+        .section-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
     </style>
 </head>
 <body class="p-4 min-h-screen">
@@ -54,15 +50,15 @@
             </div>
         </div>
 
-        <div class="bento-card border-brand-red">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="text-brand-red text-[10px] uppercase tracking-widest font-bold">Gmail u/1 Portal</h3>
-                <i data-lucide="mail" class="w-4 h-4 text-brand-red"></i>
+        <div class="bento-card border-[#FF8981]/20">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[#FF8981] section-title">Gmail u/1 Portal</h3>
+                <i data-lucide="mail" class="w-5 h-5 text-[#FF8981]"></i>
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <a href="https://mail.google.com/mail/u/1/#priority" target="_blank" class="bg-[#0a0a0a] border border-[#2a2a2a] p-3 rounded-xl flex items-center justify-between group hover-border-brand-red transition">
-                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Priority Inbox</span>
-                    <i data-lucide="star" class="w-4 h-4 text-brand-red"></i>
+                <a href="https://mail.google.com/mail/u/1/#search/label%3Aunread" target="_blank" class="bg-[#0a0a0a] border border-[#2a2a2a] p-3 rounded-xl flex items-center justify-between group hover:border-[#FF8981]/50 transition">
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Unread Messages</span>
+                    <i data-lucide="mail-warning" class="w-4 h-4 text-[#FF8981]"></i>
                 </a>
                 <a href="https://mail.google.com/mail/u/1/#compose" target="_blank" class="accent-bg p-3 rounded-xl flex items-center justify-between group hover:opacity-90 transition">
                     <span class="text-[10px] font-bold uppercase tracking-widest">Compose</span>
@@ -91,7 +87,7 @@
         </div>
 
         <div class="bento-card">
-            <h3 class="text-[#fff1ce] text-[10px] uppercase tracking-widest mb-4 font-bold">Priority Tasks</h3>
+            <h3 class="text-[#fff1ce] section-title mb-4">Priority Tasks</h3>
             <div class="flex gap-2 mb-4">
                 <input type="text" id="taskInput" placeholder="Add task..." class="flex-1 bg-[#0a0a0a] border border-[#2a2a2a] rounded-xl px-4 py-2 text-sm text-[#fffefb] focus:outline-none focus:border-[#fff1ce]">
                 <button onclick="addTask()" class="accent-bg text-[#0a0a0a] px-5 rounded-xl font-bold">+</button>
@@ -100,7 +96,7 @@
         </div>
 
         <div class="bento-card">
-            <h3 class="text-[#fff1ce] text-[10px] uppercase tracking-widest mb-4 font-bold">Habit Streaks (7D)</h3>
+            <h3 class="text-[#fff1ce] section-title mb-4">Habit Streaks</h3>
             <div id="habitList" class="space-y-4 scroller"></div>
             <div class="flex gap-2 mt-4">
                 <input type="text" id="habitInput" placeholder="New habit..." class="flex-1 bg-[#0a0a0a] border border-[#2a2a2a] rounded-xl px-4 py-2 text-sm text-[#fffefb] focus:outline-none focus:border-[#fff1ce]">
@@ -110,7 +106,7 @@
 
         <div class="bento-card p-0 overflow-hidden h-[500px]">
             <div class="p-4 border-b border-[#2a2a2a] bg-[#1c1c1c] flex justify-between items-center">
-                <h3 class="text-[#fffefb] text-[10px] uppercase tracking-widest opacity-60">Schedule</h3>
+                <h3 class="text-[#fffefb] section-title opacity-60">Schedule</h3>
                 <a href="https://tasks.google.com/u/0/canvas" target="_blank" class="brand-accent text-xs font-bold border-2 border-[#fff1ce] px-6 py-2 rounded-full uppercase hover:bg-[#fff1ce] hover:text-[#0a0a0a] transition-all">
                     Google Tasks Portal
                 </a>
@@ -128,7 +124,6 @@
         }
         setInterval(updateUI, 1000); updateUI();
 
-        // VOLUME LOCK 10%
         const iframe = document.getElementById('focus-video');
         iframe.onload = function() {
             let volInterval = setInterval(() => {
