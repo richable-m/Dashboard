@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Vertical V25</title>
+    <title>Rad Creative Vertical V26</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -96,16 +96,14 @@
     </div>
 
     <script>
-        // UPDATED GEMINI FUNCTION
+        // FIXED ACTION FOR GEMINI
         function askGemini() {
             const input = document.getElementById('geminiPrompt');
             const query = input.value.trim();
-            
             if (query !== "") {
-                // We use the direct URL structure that Google uses for deep-linking queries
-                const url = `https://gemini.google.com/app?q=${encodeURIComponent(query)}`;
+                const url = `https://gemini.google.com/app?prompt=${encodeURIComponent(query)}`;
                 window.open(url, '_blank');
-                input.value = ''; // Clear after launch
+                input.value = ''; 
             } else {
                 window.open('https://gemini.google.com/app', '_blank');
             }
@@ -127,8 +125,6 @@
         // VOLUME LOCK 10%
         const iframe = document.getElementById('focus-video');
         iframe.onload = function() {
-            // The postMessage command requires the YouTube Player API to be ready
-            // We send it multiple times to ensure the iframe catches it after load
             let volInterval = setInterval(() => {
                 iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[10]}', '*');
             }, 1000);
