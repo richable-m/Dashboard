@@ -3,21 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Rich-V29</title>
+    <title>Rad Creative Rich-V30</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Syne+Mono&display=swap');
+        
+        :root {
+            --brand-red: #FF8981;
+            --brand-yellow: #fff1ce;
+        }
+
         body { background-color: #0a0a0a; color: #fffefb; font-family: 'Open Sans', sans-serif; }
-        .brand-accent { font-family: 'Syne Mono', monospace; color: #fff1ce; }
+        .brand-accent { font-family: 'Syne Mono', monospace; color: var(--brand-yellow); }
         .bento-card { background: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 1.25rem; padding: 1.5rem; display: flex; flex-direction: column; }
         .dark-cal { filter: invert(92%) hue-rotate(180deg) brightness(105%) contrast(100%); background: #ffffff; }
-        .accent-bg { background-color: #fff1ce; color: #0a0a0a; }
+        .accent-bg { background-color: var(--brand-yellow); color: #0a0a0a; }
         .scroller { overflow-y: auto; max-height: 250px; }
         .scroller::-webkit-scrollbar { width: 4px; }
         .scroller::-webkit-scrollbar-thumb { background: #333333; border-radius: 10px; }
         .day-sq { width: 10px; height: 10px; border-radius: 2px; background: #2a2a2a; transition: all 0.3s ease; }
-        .day-sq.active { background: #fff1ce; box-shadow: 0 0 8px rgba(255, 241, 206, 0.4); }
+        .day-sq.active { background: var(--brand-yellow); box-shadow: 0 0 8px rgba(255, 241, 206, 0.4); }
+        
+        /* Custom Red Text/Border Utilities */
+        .text-brand-red { color: var(--brand-red); }
+        .border-brand-red { border-color: rgba(255, 137, 129, 0.2); }
+        .hover-border-brand-red:hover { border-color: rgba(255, 137, 129, 0.5); }
     </style>
 </head>
 <body class="p-4 min-h-screen">
@@ -43,15 +54,15 @@
             </div>
         </div>
 
-        <div class="bento-card border-[#ea4335]/10">
+        <div class="bento-card border-brand-red">
             <div class="flex justify-between items-center mb-3">
-                <h3 class="text-[#fff1ce] text-[10px] uppercase tracking-widest font-bold">Gmail u/1</h3>
-                <i data-lucide="mail" class="w-3 h-3 text-[#ea4335]"></i>
+                <h3 class="text-brand-red text-[10px] uppercase tracking-widest font-bold">Gmail u/1 Portal</h3>
+                <i data-lucide="mail" class="w-4 h-4 text-brand-red"></i>
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <a href="https://mail.google.com/mail/u/1/#inbox" target="_blank" class="bg-[#0a0a0a] border border-[#2a2a2a] p-3 rounded-xl flex items-center justify-between group hover:border-[#ea4335]/40 transition">
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Notifications</span>
-                    <i data-lucide="bell" class="w-4 h-4 text-[#ea4335]"></i>
+                <a href="https://mail.google.com/mail/u/1/#priority" target="_blank" class="bg-[#0a0a0a] border border-[#2a2a2a] p-3 rounded-xl flex items-center justify-between group hover-border-brand-red transition">
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Priority Inbox</span>
+                    <i data-lucide="star" class="w-4 h-4 text-brand-red"></i>
                 </a>
                 <a href="https://mail.google.com/mail/u/1/#compose" target="_blank" class="accent-bg p-3 rounded-xl flex items-center justify-between group hover:opacity-90 transition">
                     <span class="text-[10px] font-bold uppercase tracking-widest">Compose</span>
