@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bento Dashboard V7</title>
+    <title>Bento Dashboard V8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -17,7 +17,6 @@
             flex-direction: column; 
             transition: all 0.3s ease; 
         }
-        /* Custom Scrollbar */
         .scroller { overflow-y: auto; max-height: 250px; }
         .scroller::-webkit-scrollbar { width: 4px; }
         .scroller::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
@@ -36,7 +35,6 @@
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowfullscreen>
             </iframe>
-
             <div class="absolute top-4 left-4 z-10 pointer-events-none">
                 <span class="bg-black/60 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-md uppercase tracking-widest border border-white/10">
                     Focus Mode
@@ -85,10 +83,20 @@
             <div id="taskList" class="space-y-2 scroller"></div>
         </div>
 
+        <div class="md:col-span-4 bento-card p-0 overflow-hidden h-[600px] border-zinc-800">
+             <iframe 
+                src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%2318181b&ctz=America%2FNew_York&src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%23039BE5" 
+                style="border-width:0" 
+                width="100%" 
+                height="100%" 
+                frameborder="0" 
+                scrolling="no">
+            </iframe>
+        </div>
+
     </div>
 
     <script>
-        // 1. Clock Logic
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -97,7 +105,6 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 2. Habits & Tasks Logic
         let habits = JSON.parse(localStorage.getItem('habits')) || [];
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
@@ -128,19 +135,15 @@
             lucide.createIcons();
         }
 
-        // Functions
         function addHabit() { const input = document.getElementById('habitInput'); if(input.value.trim()) { habits.push({text: input.value.trim(), done: false}); input.value=''; render(); } }
         function addTask() { const input = document.getElementById('taskInput'); if(input.value.trim()) { tasks.push({text: input.value.trim(), done: false}); input.value=''; render(); } }
-        
         function toggleH(i) { habits[i].done = !habits[i].done; render(); }
         function toggleT(i) { tasks[i].done = !tasks[i].done; render(); }
         function delH(i) { habits.splice(i, 1); render(); }
         function delT(i) { tasks.splice(i, 1); render(); }
 
-        // Enter Key Listeners
         document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
-
         render();
     </script>
 </body>
