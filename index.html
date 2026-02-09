@@ -3,41 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Dashboard v38</title>
+    <title>Rad Creative Dashboard v39</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Syne+Mono&display=swap');
-        
-        :root {
-            --brand-red: #FF8981;
-            --brand-yellow: #fff1ce;
-        }
-
-        body { background-color: #0a0a0a; color: #fffefb; font-family: 'Open Sans', sans-serif; overflow-x: hidden; }
+        :root { --brand-red: #FF8981; --brand-yellow: #fff1ce; }
+        body { background-color: #0a0a0a; color: #fffefb; font-family: 'Open Sans', sans-serif; }
         .brand-accent { font-family: 'Syne Mono', monospace; color: var(--brand-yellow); }
         .bento-card { background: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 1.25rem; padding: 1.5rem; display: flex; flex-direction: column; position: relative; }
         .dark-cal { filter: invert(92%) hue-rotate(180deg) brightness(105%) contrast(100%); background: #ffffff; }
         .accent-bg { background-color: var(--brand-yellow); color: #0a0a0a; }
-        
-        /* Custom Scroller */
         .scroller { overflow-y: auto; max-height: 250px; }
         .scroller::-webkit-scrollbar { width: 4px; }
         .scroller::-webkit-scrollbar-thumb { background: #333333; border-radius: 10px; }
-
-        /* Habit Heatmap */
         .day-sq { width: 10px; height: 10px; border-radius: 2px; background: #2a2a2a; transition: all 0.3s ease; }
         .day-sq.active { background: var(--brand-yellow); box-shadow: 0 0 8px rgba(255, 241, 206, 0.4); }
-        
         .section-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
-        
-        /* Video Overlay Fix */
-        #video-controls-overlay { 
-            background: rgba(10, 10, 10, 0.98); 
-            backdrop-filter: blur(12px); 
-            display: none; 
-            z-index: 100;
-        }
+        #video-controls-overlay { background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(12px); display: none; z-index: 100; }
+        /* Ensure icons have space even before they load */
+        i { display: inline-block; min-width: 1em; min-height: 1em; }
     </style>
 </head>
 <body class="p-4 min-h-screen">
@@ -50,9 +35,7 @@
                     <p class="brand-accent text-3xl font-bold uppercase tracking-tighter">Good Evening, Rich</p>
                     <p id="date" class="brand-accent text-xs opacity-60 uppercase tracking-widest mt-1">Date Loading...</p>
                 </div>
-                <div class="flex-none">
-                    <h1 id="clock" class="brand-accent text-7xl font-bold tracking-tighter leading-none">00:00</h1>
-                </div>
+                <div class="flex-none"><h1 id="clock" class="brand-accent text-7xl font-bold tracking-tighter leading-none">00:00</h1></div>
                 <div class="flex-1 text-right">
                     <div class="flex items-center justify-end gap-2 text-[#fff1ce]">
                         <i data-lucide="cloud-moon" class="w-8 h-8"></i>
@@ -70,7 +53,7 @@
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <a href="https://mail.google.com/mail/u/1/#search/label%3Aunread" target="_blank" class="bg-[#0a0a0a] border border-[#2a2a2a] p-3 rounded-xl flex items-center justify-between group hover:border-[#FF8981]/50 transition">
-                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Unread Only</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Unread</span>
                     <i data-lucide="mail-warning" class="w-4 h-4 text-[#FF8981]"></i>
                 </a>
                 <a href="https://mail.google.com/mail/u/1/#compose" target="_blank" class="accent-bg p-3 rounded-xl flex items-center justify-between group hover:opacity-90 transition">
@@ -83,37 +66,35 @@
         <div class="bento-card border-[#fff1ce]/5">
             <h3 class="text-[#fff1ce] section-title mb-4">Launch Pad</h3>
             <div class="grid grid-cols-4 gap-4">
-                <a href="slack://open" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] border border-[#2a2a2a] transition group">
-                    <i data-lucide="message-circle" class="w-6 h-6 text-[#fff1ce]"></i>
-                    <span class="text-xs font-bold uppercase tracking-widest">Slack</span>
+                <a href="slack://open" class="flex flex-col items-center justify-center gap-3 py-8 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] border border-[#2a2a2a] transition group">
+                    <i data-lucide="message-circle" class="w-8 h-8 text-[#fff1ce]"></i>
+                    <span class="text-sm font-bold uppercase tracking-widest">Slack</span>
                 </a>
-                <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] border border-[#2a2a2a] transition group">
-                    <i data-lucide="video" class="w-6 h-6 text-[#fff1ce]"></i>
-                    <span class="text-xs font-bold uppercase tracking-widest">Jitter</span>
+                <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-3 py-8 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] border border-[#2a2a2a] transition group">
+                    <i data-lucide="video" class="w-8 h-8 text-[#fff1ce]"></i>
+                    <span class="text-sm font-bold uppercase tracking-widest">Jitter</span>
                 </a>
-                <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] border border-[#2a2a2a] transition group">
-                    <i data-lucide="linkedin" class="w-6 h-6 text-[#fff1ce]"></i>
-                    <span class="text-xs font-bold uppercase tracking-widest">LinkedIn</span>
+                <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-3 py-8 bg-[#0a0a0a] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] border border-[#2a2a2a] transition group">
+                    <i data-lucide="linkedin" class="w-8 h-8 text-[#fff1ce]"></i>
+                    <span class="text-sm font-bold uppercase tracking-widest">LinkedIn</span>
                 </a>
-                <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#fff1ce]/5 rounded-2xl hover:bg-[#fff1ce]/20 text-[#fff1ce] border border-[#fff1ce]/20 transition group">
-                    <i data-lucide="sparkles" class="w-6 h-6 text-[#fff1ce]"></i>
-                    <span class="text-xs font-bold uppercase tracking-widest">Gemini</span>
+                <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-3 py-8 bg-[#fff1ce]/5 rounded-2xl hover:bg-[#fff1ce]/20 text-[#fff1ce] border border-[#fff1ce]/20 transition group">
+                    <i data-lucide="sparkles" class="w-8 h-8 text-[#fff1ce]"></i>
+                    <span class="text-sm font-bold uppercase tracking-widest">Gemini</span>
                 </a>
             </div>
         </div>
 
         <div class="bento-card p-0 overflow-hidden relative aspect-video group">
             <iframe id="focus-video" src="https://www.youtube-nocookie.com/embed/DUzQadS3aJ0?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1" class="absolute inset-0 w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            
-            <button onclick="toggleVideoSettings()" class="absolute top-4 right-4 z-50 bg-black/60 p-2 rounded-full border border-white/10 opacity-60 hover:opacity-100 transition shadow-lg">
+            <button onclick="toggleVideoSettings()" class="absolute top-4 right-4 z-50 bg-black/60 p-2 rounded-full border border-white/10 opacity-60 hover:opacity-100 transition">
                 <i data-lucide="settings" class="w-4 h-4 text-[#fff1ce]"></i>
             </button>
-
             <div id="video-controls-overlay" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
-                <h3 class="brand-accent text-lg mb-4">Change Environment</h3>
+                <h3 class="brand-accent text-lg mb-4">Update Environment</h3>
                 <div class="flex gap-2 w-full max-w-md">
                     <input type="text" id="videoUrlInput" placeholder="Paste YouTube Link..." class="flex-1 bg-black border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#fff1ce]">
-                    <button onclick="updateVideo()" class="accent-bg px-6 py-3 rounded-xl font-bold text-xs uppercase shadow-xl">Update</button>
+                    <button onclick="updateVideo()" class="accent-bg px-6 py-3 rounded-xl font-bold text-xs uppercase">Set</button>
                 </div>
                 <button onclick="toggleVideoSettings()" class="mt-6 text-[10px] uppercase opacity-40 hover:opacity-100 tracking-widest underline">Cancel</button>
             </div>
@@ -122,7 +103,7 @@
         <div class="bento-card">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-[#fff1ce] section-title">Priority Tasks</h3>
-                <span class="text-[9px] uppercase tracking-tighter opacity-30">Auto-clean 12h</span>
+                <span class="text-[9px] uppercase tracking-tighter opacity-30">Auto-purge 12h</span>
             </div>
             <div class="flex gap-2 mb-4">
                 <input type="text" id="taskInput" placeholder="Add task..." class="flex-1 bg-[#0a0a0a] border border-[#2a2a2a] rounded-xl px-4 py-2 text-sm text-[#fffefb] focus:outline-none focus:border-[#fff1ce]">
@@ -150,6 +131,15 @@
     </div>
 
     <script>
+        // --- ICON RELIABILITY ---
+        function forceIcons() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            } else {
+                setTimeout(forceIcons, 500); // Retry every 500ms until loaded
+            }
+        }
+
         // --- TIME & DATE ---
         function updateUI() {
             const now = new Date();
@@ -157,36 +147,24 @@
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
             cleanOldTasks();
         }
-        setInterval(updateUI, 30000); 
-        updateUI();
+        setInterval(updateUI, 30000); updateUI();
 
         // --- VIDEO LOGIC ---
-        const videoIframe = document.getElementById('focus-video');
-        
-        // Load saved video if exists
-        window.addEventListener('load', () => {
-            const saved = localStorage.getItem('rad_video_id');
-            if(saved && saved !== 'DUzQadS3aJ0') {
-                videoIframe.src = `https://www.youtube-nocookie.com/embed/${saved}?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1`;
-            }
-        });
-
         function toggleVideoSettings() {
             const overlay = document.getElementById('video-controls-overlay');
             overlay.style.display = (overlay.style.display === 'flex') ? 'none' : 'flex';
+            forceIcons();
         }
 
         function updateVideo() {
             const val = document.getElementById('videoUrlInput').value.trim();
-            let id = '';
-            
+            let id = val;
             if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
             else if (val.includes('be/')) id = val.split('be/')[1].split('?')[0];
-            else if (val.length === 11) id = val;
-
-            if (id) {
+            
+            if (id && id.length >= 11) {
                 localStorage.setItem('rad_video_id', id);
-                videoIframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1`;
+                document.getElementById('focus-video').src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1`;
                 toggleVideoSettings();
                 document.getElementById('videoUrlInput').value = '';
             }
@@ -198,21 +176,20 @@
 
         function cleanOldTasks() {
             const twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
+            const len = tasks.length;
             tasks = tasks.filter(t => !t.done || !t.completedAt || t.completedAt > twelveHoursAgo);
-            render();
+            if (len !== tasks.length) render();
         }
 
         function render() {
             const today = new Date().toISOString().split('T')[0];
             
-            // Render Tasks
             document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
                 <div class="flex justify-between items-center bg-[#0a0a0a] p-3 rounded-xl border border-[#2a2a2a] group">
                     <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
                     <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
                 </div>`).join('');
 
-            // Render Habits
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
                 let hMap = '';
                 for(let d=6; d>=0; d--) {
@@ -233,14 +210,9 @@
 
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
             localStorage.setItem('rad_habits', JSON.stringify(habits));
-            
-            // Re-initialize Icons after HTML injection
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
+            forceIcons();
         }
 
-        // --- INTERACTION HELPERS ---
         function addTask() { 
             const inp = document.getElementById('taskInput'); 
             if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false, completedAt: null}); inp.value=''; render(); } 
@@ -254,13 +226,15 @@
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
         document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
 
-        // Final Boot
-        document.addEventListener('DOMContentLoaded', () => {
+        // Initialize saved video
+        window.onload = () => {
+            const saved = localStorage.getItem('rad_video_id');
+            if(saved && saved !== 'DUzQadS3aJ0') {
+                document.getElementById('focus-video').src = `https://www.youtube-nocookie.com/embed/${saved}?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1`;
+            }
             render();
-            // Backup icon trigger
-            setTimeout(() => { if(typeof lucide !== 'undefined') lucide.createIcons(); }, 1000);
-        });
+            forceIcons();
+        };
     </script>
 </body>
 </html>
-
