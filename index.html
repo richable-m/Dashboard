@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Vertical V18</title>
+    <title>Rad Creative Vertical V19</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -36,7 +36,7 @@
             <div class="flex gap-2">
                 <input type="text" id="geminiPrompt" placeholder="Type a prompt..." 
                     class="flex-1 bg-zinc-900/80 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500 transition">
-                <button onclick="askGemini()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-bold text-xs transition">Launch</button>
+                <button onclick="askGemini()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-bold text-xs transition uppercase">Launch</button>
             </div>
         </div>
 
@@ -46,14 +46,20 @@
 
         <div class="grid grid-cols-2 gap-4">
             <div class="bento-card bg-red-950/5 border-red-900/20">
-                <h3 class="text-red-500 font-bold text-[10px] uppercase tracking-widest mb-3">Mail</h3>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-red-500 font-bold text-[10px] uppercase tracking-widest">Mail</h3>
+                    <a href="https://mail.google.com/mail/u/1/#inbox" target="_blank"><i data-lucide="external-link" class="w-3 h-3 text-red-500/50"></i></a>
+                </div>
                 <a href="https://mail.google.com/mail/u/1/#compose" target="_blank" class="flex items-center justify-center gap-2 py-3 bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 rounded-xl text-red-500 text-[10px] font-bold transition uppercase">
                     <i data-lucide="pen-tool" class="w-3 h-3"></i> Compose
                 </a>
             </div>
-            <div class="bento-card justify-center gap-2">
-                <a href="slack://open" class="flex items-center justify-center gap-2 p-2 bg-zinc-900/50 rounded-lg hover:bg-zinc-800 text-zinc-400 transition text-[10px] font-bold border border-zinc-800/50 uppercase"><i data-lucide="message-circle" class="w-3 h-3 text-purple-400"></i> Slack</a>
-                <a href="https://linkedin.com" target="_blank" class="flex items-center justify-center gap-2 p-2 bg-zinc-900/50 rounded-lg hover:bg-zinc-800 text-zinc-400 transition text-[10px] font-bold border border-zinc-800/50 uppercase"><i data-lucide="linkedin" class="w-3 h-3 text-blue-500"></i> LinkedIn</a>
+            <div class="bento-card justify-center gap-2 py-3">
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="slack://open" class="flex items-center justify-center gap-2 p-2 bg-zinc-900/50 rounded-lg hover:bg-zinc-800 text-zinc-400 transition text-[9px] font-bold border border-zinc-800/50 uppercase"><i data-lucide="message-circle" class="w-3 h-3 text-purple-400"></i> Slack</a>
+                    <a href="https://jitter.video" target="_blank" class="flex items-center justify-center gap-2 p-2 bg-zinc-900/50 rounded-lg hover:bg-zinc-800 text-zinc-400 transition text-[9px] font-bold border border-zinc-800/50 uppercase"><i data-lucide="video" class="w-3 h-3 text-pink-500"></i> Jitter</a>
+                </div>
+                <a href="https://linkedin.com" target="_blank" class="flex items-center justify-center gap-2 p-2 bg-zinc-900/50 rounded-lg hover:bg-zinc-800 text-zinc-400 transition text-[9px] font-bold border border-zinc-800/50 uppercase"><i data-lucide="linkedin" class="w-3 h-3 text-blue-500"></i> LinkedIn</a>
             </div>
         </div>
 
@@ -76,8 +82,8 @@
 
         <div class="bento-card">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-zinc-600 font-bold text-[10px] uppercase tracking-widest">Tasks</h3>
-                <a href="https://tasks.google.com/u/0/canvas" target="_blank" class="text-[9px] font-bold text-blue-500 bg-blue-500/10 px-2 py-1 rounded-lg uppercase">G-Tasks</a>
+                <h3 class="text-zinc-600 font-bold text-[10px] uppercase tracking-widest">Google Tasks</h3>
+                <a href="https://tasks.google.com/u/0/canvas" target="_blank" class="text-[9px] font-bold text-blue-500 bg-blue-500/10 px-2 py-1 rounded-lg uppercase">Open Portal</a>
             </div>
             <div id="taskList" class="space-y-2 scroller"></div>
         </div>
@@ -117,9 +123,8 @@
             setTimeout(() => { iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[10]}', '*'); }, 2000);
         };
 
-        // Habits & Tasks (Local Storage)
+        // Data Management
         let habits = JSON.parse(localStorage.getItem('habits_v2')) || [];
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         function getTodayStr() { return new Date().toISOString().split('T')[0]; }
 
         function render() {
@@ -127,25 +132,18 @@
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
                 const isDoneToday = h.history.includes(today);
                 return `<div class="bg-zinc-900/30 p-3 rounded-xl border border-zinc-800/50 flex justify-between items-center">
-                    <span class="text-xs ${isDoneToday ? 'text-zinc-600 line-through' : 'text-zinc-200'}">${h.text}</span>
+                    <span class="text-xs ${isDoneToday ? 'text-zinc-500 line-through' : 'text-zinc-200'}">${h.text}</span>
                     <button onclick="toggleH(${i})" class="p-1 rounded-lg ${isDoneToday ? 'bg-green-500/20 text-green-500' : 'bg-zinc-800 text-zinc-500'}"><i data-lucide="check-circle-2" class="w-4 h-4"></i></button>
                 </div>`;
             }).join('');
-
-            document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
-                <div class="flex justify-between items-center bg-zinc-900/30 p-2 rounded-lg border border-zinc-800/50">
-                    <span class="text-xs text-zinc-300 truncate" onclick="toggleT(${i})">${t.text}</span>
-                    <button onclick="delT(${i})" class="text-zinc-600 hover:text-red-500 transition"><i data-lucide="x" class="w-3 h-3"></i></button>
-                </div>`).join('');
-
             localStorage.setItem('habits_v2', JSON.stringify(habits));
-            localStorage.setItem('tasks', JSON.stringify(tasks));
             lucide.createIcons();
         }
 
         function addHabit() { const input = document.getElementById('habitInput'); if(input.value.trim()) { habits.push({ text: input.value.trim(), history: [] }); input.value = ''; render(); } }
         function toggleH(i) { const today = getTodayStr(); const idx = habits[i].history.indexOf(today); if(idx > -1) habits[i].history.splice(idx, 1); else habits[i].history.push(today); render(); }
-        function delT(i) { tasks.splice(i, 1); render(); }
+        
+        document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
         render();
     </script>
 </body>
