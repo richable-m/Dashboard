@@ -210,9 +210,21 @@
             }
         }
 
+        // --- DATA & UI ---
         let tasks = JSON.parse(localStorage.getItem('rad_tasks')) || [];
         let habits = JSON.parse(localStorage.getItem('rad_habits')) || [];
         let player;
+        
+        // AUTO-REFRESH LOGIC: Track the date the dashboard was opened
+        let currentOpenDate = new Date().toLocaleDateString();
+
+        function checkDateChange() {
+            const now = new Date().toLocaleDateString();
+            if (now !== currentOpenDate) {
+                console.log("Date changed! Refreshing dashboard...");
+                window.location.reload();
+            }
+        }
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('focus-video', {
@@ -229,6 +241,9 @@
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
             let greet = hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
             document.getElementById('greeting').innerText = `${greet}, Rich`;
+            
+            // Trigger the midnight check every time the clock updates
+            checkDateChange();
         }
         
         async function fetchWeather() {
@@ -299,7 +314,12 @@
         tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
         
-        setInterval(updateUI, 60000); updateUI(); fetchWeather(); setInterval(fetchWeather, 900000);
+        // Update clock every minute and check for date change
+        setInterval(updateUI, 60000); 
+        updateUI(); 
+        fetchWeather(); 
+        setInterval(fetchWeather, 900000);
+        
         const boot = () => { if (window.lucide) { render(); } else { setTimeout(boot, 50); } };
         boot();
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
