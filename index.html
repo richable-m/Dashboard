@@ -124,37 +124,23 @@
     </div>
 
     <script>
+        // DATA LOGIC
+        let tasks = JSON.parse(localStorage.getItem('rad_tasks')) || [];
+        let habits = JSON.parse(localStorage.getItem('rad_habits')) || [];
+
         function updateUI() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
             cleanOldTasks();
         }
-        setInterval(updateUI, 60000); updateUI();
-
-        // VIDEO LOGIC
-        function toggleVideoSettings() {
-            const p = document.getElementById('video-controls'); p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
-        }
-        function updateVideo() {
-            const val = document.getElementById('videoUrlInput').value;
-            let id = val;
-            if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
-            else if (val.includes('be/')) id = val.split('be/')[1].split('?')[0];
-            if (id) {
-                document.getElementById('focus-video').src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1`;
-                toggleVideoSettings();
-            }
-        }
-
-        // DATA LOGIC
-        let tasks = JSON.parse(localStorage.getItem('rad_tasks')) || [];
-        let habits = JSON.parse(localStorage.getItem('rad_habits')) || [];
 
         function cleanOldTasks() {
             const twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
+            const initialLength = tasks.length;
             tasks = tasks.filter(t => !t.done || !t.completedAt || t.completedAt > twelveHoursAgo);
-            render();
+            // Only re-render if the list actually changed to save resources
+            if (tasks.length !== initialLength) render();
         }
 
         function render() {
@@ -172,8 +158,8 @@
                 let hMap = '';
                 for(let d=6; d>=0; d--) {
                     const date = new Date(); date.setDate(date.getDate() - d);
-                    const dateStr = date.toISOString().split('T')[0];
-                    const act = h.history.includes(dateStr) ? 'active' : '';
+                    const dStr = date.toISOString().split('T')[0];
+                    const act = h.history.includes(dStr) ? 'active' : '';
                     hMap += `<div class="day-sq ${act}"></div>`;
                 }
                 return `<div class="bg-[#0a0a0a] p-3 rounded-xl border border-[#2a2a2a] group">
@@ -189,15 +175,13 @@
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
             localStorage.setItem('rad_habits', JSON.stringify(habits));
             
-            // GURU CHECK: Safely init icons
-            if (typeof lucide !== 'undefined') {
+            // GURU FIX 2: Defensive check for Lucide library
+            if (window.lucide) {
                 lucide.createIcons();
-            } else {
-                // If script loads slowly, wait for it
-                window.addEventListener('load', () => lucide.createIcons());
             }
         }
 
+        // TASK & HABIT ACTIONS
         function addTask() { 
             const inp = document.getElementById('taskInput'); 
             if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false, completedAt: null}); inp.value=''; render(); } 
@@ -213,11 +197,38 @@
             render(); 
         }
         function delH(i) { habits.splice(i,1); render(); }
-        
+
+        // VIDEO ACTIONS
+        function toggleVideoSettings() {
+            const p = document.getElementById('video-controls'); p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+        }
+        function updateVideo() {
+            const val = document.getElementById('videoUrlInput').value;
+            let id = val;
+            if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
+            else if (val.includes('be/')) id = val.split('be/')[1].split('?')[0];
+            if (id) {
+                document.getElementById('focus-video').src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1`;
+                toggleVideoSettings();
+            }
+        }
+
+        // INITIALIZATION
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
         document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
-        
-        render();
+
+        // GURU FIX 3: Start Clock and wait for Lucide to be ready before first render
+        setInterval(updateUI, 60000); 
+        updateUI(); 
+
+        const boot = () => {
+            if (window.lucide) {
+                render();
+            } else {
+                setTimeout(boot, 50);
+            }
+        };
+        boot();
     </script>
 </body>
 </html>
