@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v48</title>
+    <title>RCC Dash v49 - The Hybrid</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -11,110 +11,111 @@
         :root { --brand-red: #FF8981; --brand-yellow: #fff1ce; }
         body { background-color: #0a0a0a; color: #fffefb; font-family: 'Open Sans', sans-serif; }
         .brand-accent { font-family: 'Syne Mono', monospace; color: var(--brand-yellow); }
-        .bento-card { background: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 1.25rem; padding: 1.5rem; width: 100%; transition: all 0.3s ease; }
-        .dark-iframe { filter: invert(90%) hue-rotate(180deg) contrast(110%); background: #fff; border-radius: 0.75rem; width: 100%; height: 100%; border: none; }
+        .bento-card { background: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 1.5rem; padding: 1.5rem; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .bento-card:hover { border-color: rgba(255, 241, 206, 0.2); transform: translateY(-2px); }
+        
+        /* Refined Drive Dark Filter */
+        .drive-container { filter: invert(90%) hue-rotate(180deg) brightness(1.1) contrast(0.9); background: #fff; border-radius: 1rem; }
         .accent-bg { background-color: var(--brand-yellow); color: #0a0a0a; }
-        .day-sq { width: 14px; height: 14px; border-radius: 3px; background: #2a2a2a; }
+        .day-sq { width: 12px; height: 12px; border-radius: 3px; background: #2a2a2a; }
         .day-sq.active { background: var(--brand-yellow); box-shadow: 0 0 8px rgba(255, 241, 206, 0.4); }
-        .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; opacity: 0.5; margin-bottom: 1rem; }
-        #video-controls { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(4px); display: none; }
+        .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 800; opacity: 0.4; }
+        #video-controls { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(10px); display: none; }
     </style>
 </head>
-<body class="p-6 min-h-screen flex justify-center">
+<body class="p-8">
 
-    <div class="w-full max-w-[900px] flex flex-col gap-6">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-6">
         
-        <div class="bento-card border-[#fff1ce]/10 flex-row items-center justify-between py-8">
-            <div class="flex-1">
-                <p id="greeting" class="brand-accent text-3xl font-bold uppercase tracking-tighter">Good Morning, Rich</p>
-                <p id="date" class="brand-accent text-xs opacity-60 uppercase tracking-widest mt-1">...</p>
-            </div>
-            <div class="text-center px-8 border-x border-white/5">
-                <h1 id="clock" class="brand-accent text-7xl font-bold tracking-tighter leading-none">00:00</h1>
-            </div>
-            <div class="flex-1 text-right flex flex-col items-end">
-                <div class="flex items-center gap-2 text-[#fff1ce]">
-                    <div id="weather-icon"><i data-lucide="cloud" class="w-8 h-8"></i></div>
-                    <span id="weather-temp" class="brand-accent text-3xl font-bold">--°F</span>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-8 bento-card flex flex-row items-center justify-between border-[#fff1ce]/10">
+                <div class="space-y-1">
+                    <p id="greeting" class="brand-accent text-3xl font-bold uppercase tracking-tighter">...</p>
+                    <p id="date" class="brand-accent text-xs opacity-50 uppercase tracking-widest">...</p>
                 </div>
-                <p class="brand-accent text-[10px] opacity-40 uppercase tracking-widest">Fort Collins, CO</p>
-            </div>
-        </div>
-
-        <div class="bento-card flex-row items-center justify-between py-6 border-white/5">
-            <div class="flex items-center gap-6">
-                <div class="p-3 rounded-2xl bg-white/5 text-[#fff1ce]"><i data-lucide="timer" class="w-8 h-8"></i></div>
-                <div>
-                    <p id="pomo-timer-display" class="brand-accent text-5xl font-bold">50:00</p>
-                    <h4 class="brand-accent text-[10px] font-bold uppercase tracking-widest opacity-40">50/10 Focus Protocol</h4>
+                <div class="text-center">
+                    <h1 id="clock" class="brand-accent text-7xl font-bold tracking-tighter leading-none">00:00</h1>
+                </div>
+                <div class="text-right">
+                    <div class="flex items-center justify-end gap-3 text-[#fff1ce]">
+                        <span id="weather-temp" class="brand-accent text-4xl font-bold">--°</span>
+                        <div id="weather-icon"><i data-lucide="sun" class="w-8 h-8"></i></div>
+                    </div>
+                    <p class="brand-accent text-[9px] opacity-40 uppercase tracking-[0.2em] mt-1">Fort Collins / 40.58°N</p>
                 </div>
             </div>
-            <button id="pomo-main-btn" onclick="togglePomo()" class="accent-bg px-12 py-4 rounded-full font-bold uppercase text-sm tracking-widest hover:scale-105 transition">Start Focus</button>
-        </div>
-
-        <div class="bento-card border-white/5">
-            <div class="grid grid-cols-4 gap-4">
-                <a href="slack://open" class="flex items-center gap-4 bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-[#fff1ce]/30 transition">
-                    <i data-lucide="message-circle" class="w-5 h-5 text-[#fff1ce]"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Slack</span>
-                </a>
-                <a href="https://jitter.video" target="_blank" class="flex items-center gap-4 bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-[#fff1ce]/30 transition">
-                    <i data-lucide="video" class="w-5 h-5 text-[#fff1ce]"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Jitter</span>
-                </a>
-                <a href="https://mail.google.com/mail/u/1/" target="_blank" class="flex items-center gap-4 bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-[#fff1ce]/30 transition">
-                    <i data-lucide="mail" class="w-5 h-5 text-[#fff1ce]"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Gmail</span>
-                </a>
-                <a href="https://gemini.google.com/app" target="_blank" class="flex items-center gap-4 bg-[#fff1ce]/10 p-4 rounded-2xl border border-[#fff1ce]/20 hover:bg-[#fff1ce]/20 transition">
-                    <i data-lucide="sparkles" class="w-5 h-5 text-[#fff1ce]"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Gemini</span>
-                </a>
+            <div id="pomo-card" class="lg:col-span-4 bento-card border-white/5 flex flex-col justify-center items-center gap-2">
+                <p id="pomo-timer-display" class="brand-accent text-5xl font-bold">50:00</p>
+                <button id="pomo-main-btn" onclick="togglePomo()" class="accent-bg w-full py-3 rounded-xl font-bold uppercase text-xs tracking-widest mt-2 hover:opacity-90 transition">Start Focus</button>
             </div>
         </div>
 
-        <div class="bento-card p-0 aspect-video relative group overflow-hidden border-white/5">
-            <div id="focus-video" class="w-full h-full"></div>
-            <button onclick="toggleVideoSettings()" class="absolute top-4 right-4 z-20 bg-black/60 p-2 rounded-full opacity-0 group-hover:opacity-100 transition"><i data-lucide="settings" class="w-4 h-4 text-white"></i></button>
-            <div id="video-controls" class="absolute inset-0 z-30 flex flex-col items-center justify-center p-8">
-                <input type="text" id="videoUrlInput" placeholder="Paste YouTube Link..." class="bg-black border border-white/20 rounded-xl px-4 py-3 text-white mb-3 text-sm w-64">
-                <button onclick="updateVideo()" class="accent-bg px-8 py-2 rounded-xl font-bold text-[10px] uppercase">Update Focus</button>
-            </div>
-        </div>
-
-        <div class="bento-card border-[#fff1ce]/10 h-[500px]">
-            <h3 class="section-title">Rad Creative Assets</h3>
-            <div class="flex-1 rounded-xl overflow-hidden bg-white">
-                <iframe src="https://drive.google.com/embeddedfolderview?id=1rNaiPDpqHdKKbmdIRHWcc-oKS43Q4KAP#grid" class="dark-iframe"></iframe>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-6">
-            <div class="bento-card h-[400px]">
-                <h3 class="section-title">Today's Tasks</h3>
-                <div class="flex gap-2 mb-4">
-                    <input type="text" id="taskInput" placeholder="New task..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-xs flex-1 focus:outline-none focus:border-[#fff1ce]">
-                    <button onclick="addTask()" class="accent-bg px-4 rounded-xl font-bold">+</button>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-4 bento-card border-white/5">
+                <h3 class="section-title mb-4">Command Center</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="slack://open" class="flex items-center gap-3 bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-[#fff1ce]/40 transition">
+                        <i data-lucide="message-square" class="w-5 h-5 text-[#fff1ce]"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-widest">Slack</span>
+                    </a>
+                    <a href="https://mail.google.com/mail/u/1/" target="_blank" class="flex items-center gap-3 bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-[#fff1ce]/40 transition">
+                        <i data-lucide="mail" class="w-5 h-5 text-[#fff1ce]"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-widest">Gmail</span>
+                    </a>
+                    <a href="https://jitter.video" target="_blank" class="flex items-center gap-3 bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-[#fff1ce]/40 transition">
+                        <i data-lucide="clapperboard" class="w-5 h-5 text-[#fff1ce]"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-widest">Jitter</span>
+                    </a>
+                    <a href="https://gemini.google.com/app" target="_blank" class="flex items-center gap-3 bg-[#fff1ce]/10 p-4 rounded-2xl border border-[#fff1ce]/30 hover:bg-[#fff1ce]/20 transition">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-[#fff1ce]"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-widest">Gemini</span>
+                    </a>
                 </div>
-                <div id="taskList" class="overflow-y-auto space-y-2 pr-2"></div>
             </div>
-            <div class="bento-card h-[400px]">
-                <h3 class="section-title">Habit Streaks</h3>
-                <div class="flex gap-2 mb-4">
-                    <input type="text" id="habitInput" placeholder="New habit..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-xs flex-1 focus:outline-none focus:border-[#fff1ce]">
-                    <button onclick="addHabit()" class="accent-bg px-4 rounded-xl font-bold">+</button>
+            <div class="lg:col-span-8 bento-card p-0 aspect-video lg:aspect-auto overflow-hidden relative group border-white/5">
+                <div id="focus-video" class="w-full h-full"></div>
+                <button onclick="toggleVideoSettings()" class="absolute top-4 right-4 z-20 bg-black/60 p-2 rounded-full opacity-0 group-hover:opacity-100 transition"><i data-lucide="settings" class="w-4 h-4 text-white"></i></button>
+                <div id="video-controls" class="absolute inset-0 z-30 flex flex-col items-center justify-center p-8">
+                    <input type="text" id="videoUrlInput" placeholder="YouTube URL..." class="bg-black border border-white/20 rounded-xl px-4 py-2 text-white mb-3 text-sm">
+                    <button onclick="updateVideo()" class="accent-bg px-8 py-2 rounded-xl font-bold text-[10px] uppercase">Update Focus</button>
                 </div>
-                <div id="habitList" class="overflow-y-auto space-y-3 pr-2"></div>
             </div>
         </div>
 
-        <div class="bento-card p-0 overflow-hidden h-[450px] border-white/5">
-            <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0" class="dark-iframe"></iframe>
+        <div class="bento-card border-[#fff1ce]/10 h-[550px]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="section-title">Rad Creative Asset Explorer</h3>
+                <p class="text-[9px] opacity-30 italic">Grid Mode Active</p>
+            </div>
+            <div class="flex-1 rounded-2xl overflow-hidden drive-container h-full">
+                <iframe src="https://drive.google.com/embeddedfolderview?id=1rNaiPDpqHdKKbmdIRHWcc-oKS43Q4KAP#grid" class="w-full h-full border-0" allowfullscreen></iframe>
+            </div>
         </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                <div class="bento-card flex-1">
+                    <div class="flex justify-between mb-4">
+                        <h3 class="section-title">Tasks</h3>
+                        <button onclick="addTask()" class="accent-bg h-6 w-6 rounded-md font-bold text-xs">+</button>
+                    </div>
+                    <input type="text" id="taskInput" placeholder="Add..." class="bg-black border border-white/10 rounded-lg px-3 py-2 text-xs w-full mb-4 focus:border-[#fff1ce] outline-none">
+                    <div id="taskList" class="space-y-2 max-h-48 overflow-y-auto pr-2"></div>
+                </div>
+                <div class="bento-card flex-1">
+                    <h3 class="section-title mb-4">Habit Streaks</h3>
+                    <div id="habitList" class="space-y-4"></div>
+                </div>
+            </div>
+            <div class="lg:col-span-8 bento-card p-0 overflow-hidden min-h-[400px] border-white/5">
+                <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0" class="drive-container w-full h-full" frameborder="0"></iframe>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // --- LOGIC ENGINE ---
+        // --- LOGIC: DATE & DATA ---
         function getLocalISODate() {
             const d = new Date();
             const offset = d.getTimezoneOffset() * 60000; 
@@ -126,7 +127,7 @@
         let lastDate = getLocalISODate();
         let player;
 
-        // Pomo
+        // --- POMO ---
         let pomoTime = 50 * 60; let isRunning = false; let pomoInterval;
         function togglePomo() {
             const btn = document.getElementById('pomo-main-btn');
@@ -145,14 +146,13 @@
             document.getElementById('pomo-timer-display').innerText = `${m}:${s}`;
         }
 
-        // Render Lists
+        // --- RENDER ---
         function render() {
             const today = getLocalISODate();
-            
             document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
-                <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5 group">
-                    <span class="text-xs ${t.done ? 'text-zinc-600 line-through' : ''}" onclick="toggleT(${i})">${t.text}</span>
-                    <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-700 hover:text-red-500 transition">×</button>
+                <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5">
+                    <span class="text-[11px] ${t.done ? 'text-zinc-600 line-through' : ''}" onclick="toggleT(${i})">${t.text}</span>
+                    <button onclick="delT(${i})" class="text-zinc-700 hover:text-red-400">×</button>
                 </div>`).join('');
 
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
@@ -163,9 +163,12 @@
                     grid += `<div class="day-sq ${h.history.includes(dStr) ? 'active' : ''}"></div>`;
                 }
                 const isDone = h.history.includes(today);
-                return `<div class="bg-black/40 p-3 rounded-xl border border-white/5 flex justify-between items-center">
-                    <div><span class="text-[10px] font-bold uppercase ${isDone ? 'opacity-30' : ''}">${h.text}</span><div class="flex gap-1.5 mt-2">${grid}</div></div>
-                    <button onclick="toggleH(${i})" class="p-2 rounded-lg ${isDone ? 'accent-bg' : 'bg-white/5 text-[#fff1ce]'}"><i data-lucide="check" class="w-4 h-4"></i></button>
+                return `<div class="flex flex-col gap-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-bold uppercase tracking-widest">${h.text}</span>
+                        <button onclick="toggleH(${i})" class="p-1 rounded-md ${isDone ? 'accent-bg' : 'bg-white/5 text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
+                    </div>
+                    <div class="flex gap-1.5">${grid}</div>
                 </div>`;
             }).join('');
 
@@ -174,18 +177,13 @@
             if (window.lucide) lucide.createIcons();
         }
 
-        // UI Updates
         function updateUI() {
             const now = new Date();
             const hrs = now.getHours();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-            
-            let greet = "Good Evening";
-            if (hrs < 12) greet = "Good Morning";
-            else if (hrs < 18) greet = "Good Afternoon";
+            let greet = hrs < 12 ? "Good Morning" : hrs < 18 ? "Good Afternoon" : "Good Evening";
             document.getElementById('greeting').innerText = `${greet}, Rich`;
-
             if (getLocalISODate() !== lastDate) { lastDate = getLocalISODate(); render(); }
         }
 
@@ -193,11 +191,11 @@
             try {
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.58&longitude=-105.08&current=temperature_2m&temperature_unit=fahrenheit');
                 const data = await res.json();
-                document.getElementById('weather-temp').innerText = `${Math.round(data.current.temperature_2m)}°F`;
+                document.getElementById('weather-temp').innerText = `${Math.round(data.current.temperature_2m)}°`;
             } catch(e) {}
         }
 
-        // Video
+        // --- VIDEO ---
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('focus-video', {
                 height: '100%', width: '100%', videoId: 'DUzQadS3aJ0',
@@ -211,22 +209,21 @@
             if (id && player) { player.loadVideoById(id); toggleVideoSettings(); }
         }
 
-        // CRUD
+        // --- CRUD ---
         function addTask() { const i = document.getElementById('taskInput'); if(i.value){ tasks.push({text: i.value, done: false}); i.value=''; render(); } }
         function toggleT(i) { tasks[i].done = !tasks[i].done; render(); }
         function delT(i) { tasks.splice(i,1); render(); }
         function addHabit() { const i = document.getElementById('habitInput'); if(i.value){ habits.push({text: i.value, history: []}); i.value=''; render(); } }
         function toggleH(i) { 
-            const t = getLocalISODate(); 
-            const idx = habits[i].history.indexOf(t);
-            if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t);
-            render(); 
+            const t = getLocalISODate(); const idx = habits[i].history.indexOf(t);
+            if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); render(); 
         }
 
         // INIT
         const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
         setInterval(updateUI, 1000); updateUI(); render(); fetchWeather();
+        document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
     </script>
 </body>
 </html>
