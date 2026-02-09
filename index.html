@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Rich-V36</title>
+    <title>Rad Creative Rich-V37</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -20,7 +20,6 @@
         .day-sq { width: 10px; height: 10px; border-radius: 2px; background: #2a2a2a; transition: all 0.3s ease; }
         .day-sq.active { background: var(--brand-yellow); box-shadow: 0 0 8px rgba(255, 241, 206, 0.4); }
         .section-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
-        /* Fix for Video Controls Visibility */
         #video-controls-overlay { background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); display: none; z-index: 50; }
     </style>
 </head>
@@ -78,7 +77,7 @@
                     <span class="text-xs font-bold uppercase tracking-widest">LinkedIn</span>
                 </a>
                 <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-3 py-6 bg-[#fff1ce]/5 rounded-2xl hover:bg-[#fff1ce]/20 text-[#fff1ce] border border-[#fff1ce]/20 group transition">
-                    <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    <i data-lucide="sparkles" class="w-6 h-6 text-[#fff1ce]"></i>
                     <span class="text-xs font-bold uppercase tracking-widest">Gemini</span>
                 </a>
             </div>
@@ -86,25 +85,23 @@
 
         <div class="bento-card p-0 overflow-hidden relative aspect-video group">
             <iframe id="focus-video" src="" class="absolute inset-0 w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            
-            <button onclick="toggleVideoSettings()" class="absolute top-4 right-4 z-40 bg-black/60 p-2 rounded-full border border-white/10 opacity-50 hover:opacity-100 hover:scale-110 transition shadow-lg">
+            <button onclick="toggleVideoSettings()" class="absolute top-4 right-4 z-40 bg-black/60 p-2 rounded-full border border-white/10 opacity-60 hover:opacity-100 transition shadow-lg">
                 <i data-lucide="settings" class="w-4 h-4 text-[#fff1ce]"></i>
             </button>
-
             <div id="video-controls-overlay" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
                 <h3 class="brand-accent text-lg mb-4">Update Focus Environment</h3>
                 <div class="flex gap-2 w-full max-w-md">
                     <input type="text" id="videoUrlInput" placeholder="Paste YouTube Link..." class="flex-1 bg-black border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#fff1ce]">
-                    <button onclick="updateVideo()" class="accent-bg px-6 py-3 rounded-xl font-bold text-xs uppercase shadow-xl">Set</button>
+                    <button onclick="updateVideo()" class="accent-bg px-6 py-3 rounded-xl font-bold text-xs uppercase">Set</button>
                 </div>
-                <button onclick="toggleVideoSettings()" class="mt-6 text-[10px] uppercase opacity-40 hover:opacity-100 tracking-widest">Back to focus</button>
+                <button onclick="toggleVideoSettings()" class="mt-6 text-[10px] uppercase opacity-40 hover:opacity-100 tracking-widest underline decoration-1">Back to focus</button>
             </div>
         </div>
 
         <div class="bento-card">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-[#fff1ce] section-title">Priority Tasks</h3>
-                <span class="text-[9px] uppercase tracking-tighter opacity-30">Auto-clean active (12h)</span>
+                <span class="text-[9px] uppercase tracking-tighter opacity-30">Auto-clean 12h</span>
             </div>
             <div class="flex gap-2 mb-4">
                 <input type="text" id="taskInput" placeholder="Add task..." class="flex-1 bg-[#0a0a0a] border border-[#2a2a2a] rounded-xl px-4 py-2 text-sm text-[#fffefb] focus:outline-none focus:border-[#fff1ce]">
@@ -140,8 +137,9 @@
         }
         setInterval(updateUI, 60000); updateUI();
 
-        // --- VIDEO LOGIC (FIXED) ---
-        let currentVideoId = localStorage.getItem('rad_video_id') || 'DUzQadS3aJ0';
+        // --- VIDEO LOGIC ---
+        const defaultVid = 'DUzQadS3aJ0';
+        let currentVideoId = localStorage.getItem('rad_video_id') || defaultVid;
         
         function setVideo() {
             const iframe = document.getElementById('focus-video');
@@ -205,7 +203,7 @@
             }).join('');
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
             localStorage.setItem('rad_habits', JSON.stringify(habits));
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         }
 
         function addTask() { 
@@ -217,8 +215,11 @@
         function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value.trim()){ habits.push({text: inp.value.trim(), history: []}); inp.value=''; render(); } }
         function toggleH(i) { const t = new Date().toISOString().split('T')[0]; const idx = habits[i].history.indexOf(t); if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); render(); }
         function delH(i) { habits.splice(i,1); render(); }
+        
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
         document.getElementById('habitInput').addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
+        
+        // Initial render
         render();
     </script>
 </body>
