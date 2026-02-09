@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rad Creative Vertical V26</title>
+    <title>Rad Creative Vertical V27</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -27,18 +27,13 @@
         <div class="bento-card items-center text-center py-6">
             <p id="greeting" class="brand-accent font-bold tracking-[0.2em] uppercase text-[10px] mb-2">Loading...</p>
             <h1 id="clock" class="brand-accent text-7xl tracking-tighter leading-none">00:00</h1>
-            <p id="date" class="brand-accent text-xs uppercase tracking-widest mt-4 opacity-60">Date Loading...</p>
-        </div>
-
-        <div class="bento-card border-[#fff1ce]/20">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="text-[#fff1ce] text-[10px] uppercase tracking-widest opacity-80 font-bold">Gemini AI Assistant</h3>
-                <i data-lucide="sparkles" class="w-4 h-4 text-[#fff1ce]"></i>
-            </div>
-            <div class="flex gap-2">
-                <input type="text" id="geminiPrompt" onkeypress="if(event.key==='Enter') askGemini()" placeholder="Ask Gemini..." 
-                    class="flex-1 bg-[#0a0a0a] border border-[#2a2a2a] rounded-xl px-4 py-2 text-sm text-[#fffefb] focus:outline-none focus:border-[#fff1ce] transition">
-                <button onclick="askGemini()" class="accent-bg px-5 py-2 rounded-xl font-bold text-xs transition uppercase hover:opacity-90">Launch</button>
+            <div class="flex items-center gap-3 mt-4 opacity-70">
+                <p id="date" class="brand-accent text-[10px] uppercase tracking-widest">Date Loading...</p>
+                <span class="text-[#2a2a2a]">|</span>
+                <div class="flex items-center gap-1.5 brand-accent text-[10px] uppercase tracking-widest">
+                    <i data-lucide="cloud-moon" class="w-3 h-3 text-[#fff1ce]"></i>
+                    <span>48°F Fort Collins</span>
+                </div>
             </div>
         </div>
 
@@ -46,27 +41,26 @@
             <iframe id="focus-video" src="https://www.youtube-nocookie.com/embed/DUzQadS3aJ0?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1" class="absolute inset-0 w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <div class="bento-card">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-[#fff1ce] text-[10px] uppercase tracking-widest opacity-80">Mail u/1</h3>
-                    <a href="https://mail.google.com/mail/u/1/#inbox" target="_blank"><i data-lucide="external-link" class="w-3 h-3 text-[#fff1ce]"></i></a>
-                </div>
-                <a href="https://mail.google.com/mail/u/1/#compose" target="_blank" class="flex items-center justify-center gap-2 py-3 border border-[#fff1ce]/30 bg-[#fff1ce]/5 rounded-xl text-[#fff1ce] text-[10px] font-bold transition uppercase hover:bg-[#fff1ce]/10">
-                    <i data-lucide="pen-tool" class="w-3 h-3"></i> Compose
-                </a>
-            </div>
-            <div class="bento-card justify-center gap-2 py-3">
-                <div class="grid grid-cols-3 gap-2">
-                    <a href="slack://open" class="flex flex-col items-center justify-center gap-1 p-2 bg-[#0a0a0a] rounded-lg hover:bg-[#2a2a2a] text-[#fffefb] transition text-[8px] font-bold border border-[#2a2a2a] uppercase"><i data-lucide="message-circle" class="w-3 h-3 text-[#fff1ce]"></i> Slack</a>
-                    <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-1 p-2 bg-[#0a0a0a] rounded-lg hover:bg-[#2a2a2a] text-[#fffefb] transition text-[8px] font-bold border border-[#2a2a2a] uppercase"><i data-lucide="video" class="w-3 h-3 text-[#fff1ce]"></i> Jitter</a>
-                    <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-1 p-2 bg-[#0a0a0a] rounded-lg hover:bg-[#2a2a2a] text-[#fffefb] transition text-[8px] font-bold border border-[#2a2a2a] uppercase"><i data-lucide="linkedin" class="w-3 h-3 text-[#fff1ce]"></i> LinkedIn</a>
-                </div>
-            </div>
+        <div class="grid grid-cols-4 gap-3">
+            <a href="slack://open" class="flex flex-col items-center justify-center gap-2 py-4 bg-[#1c1c1c] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] transition text-[8px] font-bold border border-[#2a2a2a] uppercase">
+                <i data-lucide="message-circle" class="w-4 h-4 text-[#fff1ce]"></i> Slack
+            </a>
+            <a href="https://jitter.video" target="_blank" class="flex flex-col items-center justify-center gap-2 py-4 bg-[#1c1c1c] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] transition text-[8px] font-bold border border-[#2a2a2a] uppercase">
+                <i data-lucide="video" class="w-4 h-4 text-[#fff1ce]"></i> Jitter
+            </a>
+            <a href="https://linkedin.com" target="_blank" class="flex flex-col items-center justify-center gap-2 py-4 bg-[#1c1c1c] rounded-2xl hover:bg-[#2a2a2a] text-[#fffefb] transition text-[8px] font-bold border border-[#2a2a2a] uppercase">
+                <i data-lucide="linkedin" class="w-4 h-4 text-[#fff1ce]"></i> LinkedIn
+            </a>
+            <a href="https://gemini.google.com/app" target="_blank" class="flex flex-col items-center justify-center gap-2 py-4 bg-[#fff1ce]/10 rounded-2xl hover:bg-[#fff1ce]/20 text-[#fff1ce] transition text-[8px] font-bold border border-[#fff1ce]/20 uppercase">
+                <i data-lucide="sparkles" class="w-4 h-4"></i> Gemini
+            </a>
         </div>
 
         <div class="bento-card">
-            <h3 class="text-[#fff1ce] text-[10px] uppercase tracking-widest mb-4 font-bold">Local To-Do</h3>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-[#fff1ce] text-[10px] uppercase tracking-widest font-bold">Priority Tasks</h3>
+                <a href="https://mail.google.com/mail/u/1/#inbox" target="_blank" class="brand-accent text-[9px] opacity-50 hover:opacity-100">Mail u/1</a>
+            </div>
             <div class="flex gap-2 mb-4">
                 <input type="text" id="taskInput" placeholder="Quick task..." class="flex-1 bg-[#0a0a0a] border border-[#2a2a2a] rounded-xl px-4 py-2 text-sm text-[#fffefb] focus:outline-none focus:border-[#fff1ce]">
                 <button onclick="addTask()" class="accent-bg text-[#0a0a0a] px-5 rounded-xl font-bold">+</button>
@@ -96,19 +90,6 @@
     </div>
 
     <script>
-        // FIXED ACTION FOR GEMINI
-        function askGemini() {
-            const input = document.getElementById('geminiPrompt');
-            const query = input.value.trim();
-            if (query !== "") {
-                const url = `https://gemini.google.com/app?prompt=${encodeURIComponent(query)}`;
-                window.open(url, '_blank');
-                input.value = ''; 
-            } else {
-                window.open('https://gemini.google.com/app', '_blank');
-            }
-        }
-
         function updateUI() {
             const now = new Date();
             const hours = now.getHours();
