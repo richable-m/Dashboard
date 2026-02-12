@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v53</title>
+    <title>RCC Dash v54</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -224,7 +224,6 @@
             }
         }
 
-        // --- CLEANUP LOGIC ---
         function cleanOldTasks() {
             const tenMinsAgo = Date.now() - (10 * 60 * 1000);
             const initialLen = tasks.length;
@@ -269,30 +268,32 @@
             } catch (e) { console.error(e); }
         }
 
-        // --- RENDER LOGIC WITH LOCAL TIME FIX ---
         function render() {
-            // FIX: Use local date 'en-CA' gives YYYY-MM-DD in local time
             const today = new Date().toLocaleDateString('en-CA');
             
+            // Render Tasks
             document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
                 <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5 group">
                     <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
                     <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
                 </div>`).join('');
                 
+            // Render Habits
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
                 let hMap = '';
                 for(let d=6; d>=0; d--) {
                     const date = new Date(); 
                     date.setDate(date.getDate() - d);
-                    // FIX: Use local date for history blocks too
                     const dStr = date.toLocaleDateString('en-CA');
                     hMap += `<div class="day-sq ${h.history.includes(dStr) ? 'active' : ''}"></div>`;
                 }
-                return `<div class="bg-black/40 p-3 rounded-xl border border-white/5 group">
+                return `<div class="bg-black/40 p-3 rounded-xl border border-white/5 group relative">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs ${h.history.includes(today) ? 'text-zinc-600' : 'text-[#fffefb]'}">${h.text}</span>
-                        <button onclick="toggleH(${i})" class="p-1 rounded-lg ${h.history.includes(today) ? 'bg-[#fff1ce] text-[#0a0a0a]' : 'bg-[#2a2a2a] text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
+                        <div class="flex items-center gap-1">
+                            <button onclick="delH(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-700 hover:text-red-500 transition mr-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                            <button onclick="toggleH(${i})" class="p-1 rounded-lg ${h.history.includes(today) ? 'bg-[#fff1ce] text-[#0a0a0a]' : 'bg-[#2a2a2a] text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
+                        </div>
                     </div><div class="flex gap-1.5">${hMap}</div></div>`;
             }).join('');
             
@@ -317,13 +318,27 @@
         }
 
         function delT(i) { tasks.splice(i,1); render(); }
-        function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value.trim()){ habits.push({text: inp.value.trim(), history: []}); inp.value=''; render(); } }
+
+        function addHabit() { 
+            const inp = document.getElementById('habitInput'); 
+            if(inp.value.trim()){ 
+                habits.push({text: inp.value.trim(), history: []}); 
+                inp.value=''; 
+                render(); 
+            } 
+        }
         
         function toggleH(i) { 
-            // FIX: Use local date for toggling
             const t = new Date().toLocaleDateString('en-CA'); 
             const idx = habits[i].history.indexOf(t); 
             if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); render(); 
+        }
+
+        function delH(i) {
+            if(confirm(`Delete "${habits[i].text}"?`)) {
+                habits.splice(i, 1);
+                render();
+            }
         }
 
         setInterval(updateUI, 60000); 
