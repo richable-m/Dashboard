@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v52</title>
+    <title>RCC Dash v53</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -226,14 +226,9 @@
 
         // --- CLEANUP LOGIC ---
         function cleanOldTasks() {
-            // 10 Minutes in milliseconds
             const tenMinsAgo = Date.now() - (10 * 60 * 1000);
-            
-            // Keep task if: NOT done, OR (done AND completed less than 10 mins ago)
             const initialLen = tasks.length;
             tasks = tasks.filter(t => !t.done || (t.completedAt && t.completedAt > tenMinsAgo));
-            
-            // Only re-render if we actually deleted something
             if (tasks.length !== initialLen) {
                 render();
             }
@@ -248,7 +243,7 @@
             document.getElementById('greeting').innerText = `${greet}, Rich`;
             
             checkDateChange();
-            cleanOldTasks(); // Check for old tasks every minute
+            cleanOldTasks(); 
         }
         
         async function fetchWeather() {
@@ -274,18 +269,24 @@
             } catch (e) { console.error(e); }
         }
 
+        // --- RENDER LOGIC WITH LOCAL TIME FIX ---
         function render() {
-            const today = new Date().toISOString().split('T')[0];
+            // FIX: Use local date 'en-CA' gives YYYY-MM-DD in local time
+            const today = new Date().toLocaleDateString('en-CA');
+            
             document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
                 <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5 group">
                     <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
                     <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
                 </div>`).join('');
+                
             document.getElementById('habitList').innerHTML = habits.map((h, i) => {
                 let hMap = '';
                 for(let d=6; d>=0; d--) {
-                    const date = new Date(); date.setDate(date.getDate() - d);
-                    const dStr = date.toISOString().split('T')[0];
+                    const date = new Date(); 
+                    date.setDate(date.getDate() - d);
+                    // FIX: Use local date for history blocks too
+                    const dStr = date.toLocaleDateString('en-CA');
                     hMap += `<div class="day-sq ${h.history.includes(dStr) ? 'active' : ''}"></div>`;
                 }
                 return `<div class="bg-black/40 p-3 rounded-xl border border-white/5 group">
@@ -294,6 +295,7 @@
                         <button onclick="toggleH(${i})" class="p-1 rounded-lg ${h.history.includes(today) ? 'bg-[#fff1ce] text-[#0a0a0a]' : 'bg-[#2a2a2a] text-[#fff1ce]'}"><i data-lucide="check" class="w-3 h-3"></i></button>
                     </div><div class="flex gap-1.5">${hMap}</div></div>`;
             }).join('');
+            
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
             localStorage.setItem('rad_habits', JSON.stringify(habits));
             if (window.lucide) lucide.createIcons();
@@ -302,7 +304,6 @@
         function addTask() { 
             const inp = document.getElementById('taskInput'); 
             if(inp.value.trim()){ 
-                // Initialize with no completedAt time
                 tasks.push({text: inp.value.trim(), done: false, completedAt: null}); 
                 inp.value=''; 
                 render(); 
@@ -311,15 +312,16 @@
 
         function toggleT(i) { 
             tasks[i].done = !tasks[i].done; 
-            // Add timestamp if done, remove if unchecked
             tasks[i].completedAt = tasks[i].done ? Date.now() : null;
             render(); 
         }
 
         function delT(i) { tasks.splice(i,1); render(); }
         function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value.trim()){ habits.push({text: inp.value.trim(), history: []}); inp.value=''; render(); } }
+        
         function toggleH(i) { 
-            const t = new Date().toISOString().split('T')[0]; 
+            // FIX: Use local date for toggling
+            const t = new Date().toLocaleDateString('en-CA'); 
             const idx = habits[i].history.indexOf(t); 
             if(idx > -1) habits[i].history.splice(idx,1); else habits[i].history.push(t); render(); 
         }
