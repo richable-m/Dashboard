@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v53</title>
+    <title>RCC Dash v52</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -110,11 +110,11 @@
             </div>
         </div>
 
-       <div class="bento-card p-0 overflow-hidden h-[563px] relative">
-    <div style="width: 160%; height: 160%; position: absolute; top: 0; left: 0; transform: scale(0.625); transform-origin: top left;">
-        <iframe src="https://app.chillhop.com/" class="w-full h-full border-0" allow="autoplay; encrypted-media"></iframe>
-    </div>
-</div>
+        <div class="bento-card p-0 overflow-hidden h-[563px] relative">
+            <div style="width: 160%; height: 160%; position: absolute; top: 0; left: 0; transform: scale(0.625); transform-origin: top left;">
+                <iframe src="https://app.chillhop.com/" class="w-full h-full border-0" allow="autoplay; encrypted-media"></iframe>
+            </div>
+        </div>
 
         <div class="bento-card h-[450px] border-[#fff1ce]/10">
             <div class="flex justify-between items-center mb-4">
@@ -224,6 +224,21 @@
             }
         }
 
+        // --- CLEANUP LOGIC ---
+        function cleanOldTasks() {
+            // 10 Minutes in milliseconds
+            const tenMinsAgo = Date.now() - (10 * 60 * 1000);
+            
+            // Keep task if: NOT done, OR (done AND completed less than 10 mins ago)
+            const initialLen = tasks.length;
+            tasks = tasks.filter(t => !t.done || (t.completedAt && t.completedAt > tenMinsAgo));
+            
+            // Only re-render if we actually deleted something
+            if (tasks.length !== initialLen) {
+                render();
+            }
+        }
+
         function updateUI() {
             const now = new Date();
             const hour = now.getHours();
@@ -231,7 +246,9 @@
             document.getElementById('date').innerText = now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
             let greet = hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
             document.getElementById('greeting').innerText = `${greet}, Rich`;
+            
             checkDateChange();
+            cleanOldTasks(); // Check for old tasks every minute
         }
         
         async function fetchWeather() {
@@ -282,8 +299,23 @@
             if (window.lucide) lucide.createIcons();
         }
 
-        function addTask() { const inp = document.getElementById('taskInput'); if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false}); inp.value=''; render(); } }
-        function toggleT(i) { tasks[i].done = !tasks[i].done; render(); }
+        function addTask() { 
+            const inp = document.getElementById('taskInput'); 
+            if(inp.value.trim()){ 
+                // Initialize with no completedAt time
+                tasks.push({text: inp.value.trim(), done: false, completedAt: null}); 
+                inp.value=''; 
+                render(); 
+            } 
+        }
+
+        function toggleT(i) { 
+            tasks[i].done = !tasks[i].done; 
+            // Add timestamp if done, remove if unchecked
+            tasks[i].completedAt = tasks[i].done ? Date.now() : null;
+            render(); 
+        }
+
         function delT(i) { tasks.splice(i,1); render(); }
         function addHabit() { const inp = document.getElementById('habitInput'); if(inp.value.trim()){ habits.push({text: inp.value.trim(), history: []}); inp.value=''; render(); } }
         function toggleH(i) { 
@@ -303,7 +335,3 @@
     </script>
 </body>
 </html>
-
-
-
-
