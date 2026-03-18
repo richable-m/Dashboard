@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v59</title>
+    <title>RCC Dash v60</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -102,6 +102,12 @@
                 </div>
 
                 <div class="flex flex-wrap items-center justify-center gap-3">
+                    <!-- Mode selector -->
+                    <div class="flex bg-black/40 rounded-xl p-1 border border-white/10">
+                        <button onclick="setMode(true)" id="mode-work" class="mode-btn px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition" style="background:rgba(255,137,129,0.15);color:#FF8981;">Work</button>
+                        <button onclick="setMode(false)" id="mode-break" class="mode-btn px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition text-white/30">Break</button>
+                    </div>
+
                     <!-- Protocol presets -->
                     <div class="flex bg-black/40 rounded-xl p-1 border border-white/10">
                         <button onclick="setProtocol(50, 10)" id="proto-50" class="protocol-btn active px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition">50/10</button>
@@ -321,11 +327,34 @@
             setTimeout(() => { fb.style.opacity = '0'; }, 1800);
         }
 
+        function setMode(work) {
+            isWorking = work;
+            updateModeButtons();
+            // Only reset the countdown — don't touch running state if already going
+            pomoTime = (isWorking ? workDuration : breakDuration) * 60;
+            if (!isRunning) updatePomoDisplay();
+        }
+
+        function updateModeButtons() {
+            const workBtn  = document.getElementById('mode-work');
+            const breakBtn = document.getElementById('mode-break');
+            if (isWorking) {
+                workBtn.style.background  = 'rgba(255,137,129,0.2)';
+                workBtn.style.color       = '#FF8981';
+                breakBtn.style.background = '';
+                breakBtn.style.color      = 'rgba(255,255,255,0.3)';
+            } else {
+                breakBtn.style.background = 'rgba(255,241,206,0.15)';
+                breakBtn.style.color      = '#fff1ce';
+                workBtn.style.background  = '';
+                workBtn.style.color       = 'rgba(255,255,255,0.3)';
+            }
+        }
+
         function resetPomo() {
             clearInterval(pomoInterval);
             isRunning = false;
-            isWorking = true;
-            pomoTime = workDuration * 60;
+            pomoTime = (isWorking ? workDuration : breakDuration) * 60;
             updatePomoDisplay();
             const btn = document.getElementById('pomo-main-btn');
             btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> <span>Start</span>`;
@@ -410,6 +439,7 @@
         function switchPomoMode() {
             isWorking = !isWorking;
             pomoTime = (isWorking ? workDuration : breakDuration) * 60;
+            updateModeButtons();
             triggerAlarm(isWorking);
             updatePomoDisplay();
         }
@@ -485,7 +515,7 @@
         // --- INIT ---
         if (Notification.permission === 'default') Notification.requestPermission();
         setInterval(updateUI, 60000);
-        updateUI(); fetchWeather(); render();
+        updateUI(); fetchWeather(); render(); updateModeButtons();
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
         document.getElementById('ytUrlInput').addEventListener('keypress', (e) => e.key === 'Enter' && changeVideo());
         // Allow Enter to apply custom times
