@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v58</title>
+    <title>RCC Dash v59</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -25,6 +25,10 @@
         @keyframes subtlePulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
         .pomo-running { animation: subtlePulse 3s infinite; }
         .protocol-btn.active { background-color: var(--brand-yellow); color: #0a0a0a; border-color: var(--brand-yellow); }
+        @keyframes alarmFlashWork { 0%,100%{background:#1c1c1c} 20%{background:rgba(255,137,129,0.18)} 40%{background:#1c1c1c} 60%{background:rgba(255,137,129,0.18)} 80%{background:#1c1c1c} }
+        @keyframes alarmFlashBreak { 0%,100%{background:#1c1c1c} 20%{background:rgba(255,241,206,0.15)} 40%{background:#1c1c1c} 60%{background:rgba(255,241,206,0.15)} 80%{background:#1c1c1c} }
+        .alarm-flash-work  { animation: alarmFlashWork  1.2s ease; }
+        .alarm-flash-break { animation: alarmFlashBreak 1.2s ease; }
 
         /* Custom time editor */
         .time-edit-input {
@@ -352,9 +356,61 @@
             if (window.lucide) lucide.createIcons();
         }
 
+        // --- ALARM ---
+        let audioCtx = null;
+
+        function getAudioCtx() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return audioCtx;
+        }
+
+        // Two distinct chimes: work→break is a gentle descending tone, break→work is a sharper ascending pair
+        function playChime(toWork) {
+            const ctx = getAudioCtx();
+            const notes = toWork
+                ? [{ f: 523.25, t: 0 }, { f: 659.25, t: 0.18 }, { f: 783.99, t: 0.36 }]   // ascending C-E-G (back to work, energising)
+                : [{ f: 783.99, t: 0 }, { f: 659.25, t: 0.22 }, { f: 523.25, t: 0.44 }];  // descending G-E-C (break, relaxing)
+
+            notes.forEach(({ f, t }) => {
+                const osc  = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(f, ctx.currentTime + t);
+                gain.gain.setValueAtTime(0, ctx.currentTime + t);
+                gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + t + 0.04);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.55);
+                osc.start(ctx.currentTime + t);
+                osc.stop(ctx.currentTime + t + 0.6);
+            });
+        }
+
+        function sendNotification(toWork) {
+            if (Notification.permission !== 'granted') return;
+            const title = toWork ? '⚡ Back to Work' : '☕ Break Time';
+            const body  = toWork
+                ? `${workDuration}-minute focus block starting now.`
+                : `${breakDuration}-minute break — step away!`;
+            new Notification(title, { body, silent: true });
+        }
+
+        function triggerAlarm(toWork) {
+            playChime(toWork);
+            sendNotification(toWork);
+            // Card flash
+            const card = document.getElementById('pomo-card');
+            const cls = toWork ? 'alarm-flash-work' : 'alarm-flash-break';
+            card.classList.remove('alarm-flash-work', 'alarm-flash-break');
+            void card.offsetWidth; // reflow to restart animation
+            card.classList.add(cls);
+            setTimeout(() => card.classList.remove(cls), 1400);
+        }
+
         function switchPomoMode() {
             isWorking = !isWorking;
             pomoTime = (isWorking ? workDuration : breakDuration) * 60;
+            triggerAlarm(isWorking);
             updatePomoDisplay();
         }
 
@@ -427,6 +483,7 @@
         }
 
         // --- INIT ---
+        if (Notification.permission === 'default') Notification.requestPermission();
         setInterval(updateUI, 60000);
         updateUI(); fetchWeather(); render();
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
