@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v60</title>
+    <title>RCC Dash v61</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -360,7 +360,7 @@
             btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> <span>Start</span>`;
             document.getElementById('pomo-card').classList.remove('pomo-running');
             document.getElementById('screen-glow').className = '';
-            if (window.lucide) lucide.createIcons();
+            if (window.lucide) lucide.createIcons({ nodes: document.querySelectorAll('#pomo-card [data-lucide]') });
         }
 
         function togglePomo() {
@@ -382,7 +382,7 @@
                     if (pomoTime <= 0) switchPomoMode();
                 }, 1000);
             }
-            if (window.lucide) lucide.createIcons();
+            if (window.lucide) lucide.createIcons({ nodes: document.querySelectorAll('#pomo-card [data-lucide]') });
         }
 
         // --- ALARM ---
@@ -475,7 +475,7 @@
                     <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
                 </div>`).join('');
             localStorage.setItem('rad_tasks', JSON.stringify(tasks));
-            if (window.lucide) lucide.createIcons();
+            if (window.lucide) lucide.createIcons({ nodes: document.querySelectorAll('#taskList [data-lucide]') });
         }
 
         function addTask() { const inp = document.getElementById('taskInput'); if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false}); inp.value=''; render(); } }
@@ -508,7 +508,7 @@
                 document.getElementById('weather-temp').innerText = `${temp}°F`;
                 document.getElementById('weather-desc').innerText = `${desc} · Fort Collins`;
                 document.getElementById('weather-icon').innerHTML = `<i data-lucide="${icon}" class="w-8 h-8"></i>`;
-                if (window.lucide) lucide.createIcons();
+                if (window.lucide) lucide.createIcons({ nodes: document.querySelectorAll('#weather-icon [data-lucide]') });
             } catch (e) { console.error(e); }
         }
 
