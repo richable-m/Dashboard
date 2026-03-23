@@ -6,6 +6,7 @@
     <title>RCC Dash v62</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Syne+Mono&display=swap');
         :root { --brand-red: #FF8981; --brand-yellow: #fff1ce; }
@@ -158,19 +159,21 @@
         <!-- CHILLHOP -->
         <div class="flex flex-col gap-2">
             <div class="bento-card p-0 overflow-hidden h-[563px] relative bg-black">
-                <iframe
-                    src="https://www.youtube.com/embed/live_stream?channel=UCOxqgCwgOqC2lMqC5PYz_Dg&autoplay=1&mute=0&modestbranding=1&rel=0"
-                    class="w-full h-full border-0"
-                    allow="autoplay; encrypted-media"
-                    allowfullscreen>
-                </iframe>
+                <div id="yt-player-container" class="w-full h-full"></div>
             </div>
-            <div class="bento-card py-3 px-4 flex-row items-center justify-between gap-4 border-white/5">
-                <div class="flex items-center gap-2 opacity-40">
+            <div class="bento-card py-3 px-4 flex-row items-center gap-4 border-white/5">
+                <div class="flex items-center gap-2 flex-none opacity-40">
                     <svg class="w-4 h-4 text-[#fff1ce]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-                    <span class="brand-accent text-[10px] uppercase font-bold tracking-widest">Chillhop Radio</span>
+                    <span class="text-[10px] uppercase font-bold tracking-widest">Chillhop Radio</span>
                 </div>
-                <a href="https://app.chillhop.com" target="_blank" class="brand-accent text-[10px] opacity-40 hover:opacity-100 transition uppercase tracking-widest">Open App →</a>
+                <div class="flex-1 flex gap-2">
+                    <input type="text" id="ytUrlInput" placeholder="Paste YouTube stream URL to switch…"
+                        class="bg-black/50 border border-white/10 rounded-xl px-4 py-1.5 text-xs w-full focus:outline-none focus:border-[#fff1ce]/50 transition">
+                    <button onclick="changeVideo()" class="accent-bg px-4 py-1.5 rounded-xl font-bold text-[10px] uppercase tracking-wider hover:scale-105 transition active:scale-95">
+                        Switch
+                    </button>
+                </div>
+                <a href="https://app.chillhop.com" target="_blank" class="brand-accent text-[10px] opacity-40 hover:opacity-100 transition uppercase tracking-widest flex-none">App →</a>
             </div>
         </div>
 
@@ -249,6 +252,31 @@
     </div>
 
     <script>
+        // --- YOUTUBE ---
+        let player;
+        // Chillhop Music 24/7 lofi stream — if this ID stops working,
+        // go to youtube.com/@ChillhopMusic/streams and paste the live URL below
+        const defaultVideoId = '7NOSDKb0HlU';
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player-container', {
+                height: '100%', width: '100%', videoId: defaultVideoId,
+                playerVars: { 'autoplay': 1, 'controls': 1, 'rel': 0, 'modestbranding': 1 },
+                events: { 'onReady': (e) => { e.target.setVolume(30); e.target.playVideo(); } }
+            });
+        }
+
+        function changeVideo() {
+            const urlInput = document.getElementById('ytUrlInput').value;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = urlInput.match(regExp);
+            if (match && match[2].length == 11) {
+                player.loadVideoById(match[2]);
+                player.setVolume(30);
+                document.getElementById('ytUrlInput').value = '';
+            }
+        }
+
         // --- POMODORO ---
         let pomoInterval;
         let workDuration = 50;
@@ -492,6 +520,7 @@
         setInterval(updateUI, 60000);
         updateUI(); fetchWeather(); render(); updateModeButtons();
         document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
+        document.getElementById('ytUrlInput').addEventListener('keypress', (e) => e.key === 'Enter' && changeVideo());
         // Allow Enter to apply custom times
         ['custom-work','custom-break'].forEach(id => {
             document.getElementById(id).addEventListener('keypress', (e) => e.key === 'Enter' && applyCustomTimes());
