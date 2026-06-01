@@ -179,7 +179,7 @@
 
         <!-- QUICK LINKS — full width row -->
         <div class="bento-card border-white/5">
-            <div class="grid grid-cols-4 gap-2 h-full">
+            <div class="grid grid-cols-5 gap-2 h-full">
                 <a href="slack://open" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition py-4">
                     <i data-lucide="message-circle" class="w-5 h-5 text-[#fff1ce]"></i>
                     <span class="text-[9px] uppercase font-bold tracking-tighter opacity-60">Slack</span>
@@ -192,10 +192,13 @@
                     <svg class="w-5 h-5 text-[#fff1ce]" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                     <span class="text-[9px] uppercase font-bold tracking-tighter opacity-60">LinkedIn</span>
                 </a>
-                <!-- CHANGED: Gemini → Claude -->
                 <a href="https://claude.ai" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#fff1ce]/5 rounded-xl hover:bg-[#fff1ce]/20 border border-[#fff1ce]/20 transition py-4">
                     <svg class="w-5 h-5 text-[#fff1ce]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
                     <span class="text-[9px] uppercase font-bold tracking-tighter text-[#fff1ce]">Claude</span>
+                </a>
+                <a href="https://calendar.google.com/calendar/u/2?cid=cmljaGFibGUubUBnbWFpbC5jb20" target="_blank" class="flex flex-col items-center justify-center gap-2 bg-[#0a0a0a] rounded-xl hover:bg-[#2a2a2a] border border-[#2a2a2a] transition py-4">
+                    <i data-lucide="calendar" class="w-5 h-5 text-[#fff1ce]"></i>
+                    <span class="text-[9px] uppercase font-bold tracking-tighter opacity-60">Calendar</span>
                 </a>
             </div>
         </div>
@@ -241,34 +244,83 @@
 
         </div>
 
-        <!-- TASKS -->
+        <!-- KANBAN -->
         <div class="bento-card">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center gap-4">
-                    <h3 class="text-[#fff1ce] section-title">Priority Tasks</h3>
-                    <a href="https://tasks.google.com" target="_blank" class="border border-white/10 hover:border-[#fff1ce]/40 px-3 py-1 rounded-full text-[9px] uppercase font-bold tracking-widest opacity-60 hover:opacity-100 transition flex items-center gap-1.5">
-                        <i data-lucide="external-link" class="w-3 h-3"></i> View All
-                    </a>
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-[#fff1ce] section-title">Projects</h3>
+                <button onclick="openKanbanModal()" class="accent-bg px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition active:scale-95 flex items-center gap-2">
+                    <i data-lucide="plus" class="w-3 h-3"></i> Add Card
+                </button>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-2 h-2 rounded-full bg-zinc-500"></div>
+                        <span class="text-[10px] uppercase font-bold tracking-widest opacity-50">Not Started</span>
+                        <span id="count-not-started" class="text-[10px] opacity-30 ml-auto">0</span>
+                    </div>
+                    <div id="col-not-started" class="flex flex-col gap-2 min-h-[80px]"></div>
                 </div>
-                <div class="flex gap-2">
-                    <input type="text" id="taskInput" placeholder="Add task..." class="bg-black border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#fff1ce] w-64">
-                    <button onclick="addTask()" class="accent-bg px-6 rounded-xl font-bold">+</button>
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-2 h-2 rounded-full bg-[#FF8981]"></div>
+                        <span class="text-[10px] uppercase font-bold tracking-widest opacity-50">In Progress</span>
+                        <span id="count-in-progress" class="text-[10px] opacity-30 ml-auto">0</span>
+                    </div>
+                    <div id="col-in-progress" class="flex flex-col gap-2 min-h-[80px]"></div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                        <span class="text-[10px] uppercase font-bold tracking-widest opacity-50">Complete</span>
+                        <span id="count-complete" class="text-[10px] opacity-30 ml-auto">0</span>
+                    </div>
+                    <div id="col-complete" class="flex flex-col gap-2 min-h-[80px]"></div>
                 </div>
             </div>
-            <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 gap-2 scroller"></div>
         </div>
 
-        <!-- CALENDAR -->
-        <div class="bento-card p-0 overflow-hidden" style="height:500px;">
-            <div class="flex justify-between items-center px-5 py-3 border-b border-white/5">
-                <h3 class="text-[#fff1ce] section-title">Calendar</h3>
-                <a href="https://calendar.google.com/calendar/u/2?cid=cmljaGFibGUubUBnbWFpbC5jb20" target="_blank"
-                    class="border border-white/10 hover:border-[#fff1ce]/40 px-3 py-1 rounded-full text-[9px] uppercase font-bold tracking-widest opacity-60 hover:opacity-100 transition flex items-center gap-1.5 brand-accent">
-                    <i data-lucide="external-link" class="w-3 h-3"></i> Open Calendar
-                </a>
+        <!-- KANBAN MODAL -->
+        <div id="kanban-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50" style="display:none!important;">
+            <div class="bg-[#1c1c1c] border border-[#2a2a2a] rounded-2xl p-6 w-full max-w-md flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <h4 class="brand-accent text-sm font-bold uppercase tracking-widest" id="modal-title">Add Card</h4>
+                    <button onclick="closeKanbanModal()" class="text-white/40 hover:text-white transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+                <input type="hidden" id="kanban-edit-id">
+                <div class="flex flex-col gap-3">
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest opacity-50 mb-1 block">Client</label>
+                        <input type="text" id="k-client" placeholder="e.g. Bayesian Energy"
+                            class="bg-black border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#fff1ce] w-full transition">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest opacity-50 mb-1 block">Description</label>
+                        <textarea id="k-desc" placeholder="What needs to be done?" rows="2"
+                            class="bg-black border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#fff1ce] w-full transition resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest opacity-50 mb-1 block">Due Date</label>
+                        <input type="date" id="k-due"
+                            class="bg-black border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#fff1ce] w-full transition">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest opacity-50 mb-1 block">Status</label>
+                        <select id="k-status" class="bg-black border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#fff1ce] w-full transition">
+                            <option value="not-started">Not Started</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="complete">Complete</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-1">
+                    <button onclick="saveKanbanCard()" class="accent-bg px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition active:scale-95 flex-1">Save</button>
+                    <button onclick="closeKanbanModal()" class="bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition">Cancel</button>
+                </div>
             </div>
-            <iframe src="https://calendar.google.com/calendar/embed?src=mgmt%40radcreative.work&ctz=America%2FDenver&mode=AGENDA&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0" class="dark-embed" width="100%" height="calc(100% - 49px)" frameborder="0"></iframe>
         </div>
+
+
 
     </div>
 
@@ -448,22 +500,81 @@
             }
         }
 
-        // --- TASKS ---
-        let tasks = JSON.parse(localStorage.getItem('rad_tasks')) || [];
+        // --- KANBAN ---
+        let kanbanCards = JSON.parse(localStorage.getItem('rad_kanban')) || [];
 
-        function render() {
-            document.getElementById('taskList').innerHTML = tasks.map((t, i) => `
-                <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-white/5 group">
-                    <span class="text-sm cursor-pointer ${t.done ? 'text-zinc-600 line-through' : 'text-[#fffefb]'}" onclick="toggleT(${i})">${t.text}</span>
-                    <button onclick="delT(${i})" class="opacity-0 group-hover:opacity-100 text-zinc-800 hover:text-red-500 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
-                </div>`).join('');
-            localStorage.setItem('rad_tasks', JSON.stringify(tasks));
-            if (window.lucide) lucide.createIcons({ nodes: document.querySelectorAll('#taskList [data-lucide]') });
+        function renderKanban() {
+            const cols = { 'not-started': [], 'in-progress': [], 'complete': [] };
+            kanbanCards.forEach((c, i) => { if (cols[c.status]) cols[c.status].push({...c, i}); });
+
+            const colColors = { 'not-started': 'border-zinc-700', 'in-progress': 'border-[#FF8981]/40', 'complete': 'border-emerald-700/40' };
+            const colDotColors = { 'not-started': 'bg-zinc-500', 'in-progress': 'bg-[#FF8981]', 'complete': 'bg-emerald-500' };
+
+            ['not-started', 'in-progress', 'complete'].forEach(status => {
+                const el = document.getElementById('col-' + status);
+                const count = document.getElementById('count-' + status);
+                count.innerText = cols[status].length;
+                el.innerHTML = cols[status].map(c => {
+                    const due = c.due ? new Date(c.due + 'T00:00:00') : null;
+                    const today = new Date(); today.setHours(0,0,0,0);
+                    const isOverdue = due && due < today && status !== 'complete';
+                    const dueStr = due ? due.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '';
+                    return `<div class="bg-black/40 border ${colColors[status]} rounded-xl p-3 group flex flex-col gap-2">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-[11px] font-bold text-[#fff1ce] uppercase tracking-wider leading-tight">${c.client}</span>
+                            <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition flex-none">
+                                <button onclick="editKanbanCard(${c.i})" class="text-white/30 hover:text-[#fff1ce] transition"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                                <button onclick="deleteKanbanCard(${c.i})" class="text-white/30 hover:text-[#FF8981] transition"><i data-lucide="x" class="w-3 h-3"></i></button>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-white/50 leading-snug">${c.desc}</p>
+                        ${dueStr ? `<div class="flex items-center gap-1 mt-1"><i data-lucide="clock" class="w-3 h-3 ${isOverdue ? 'text-[#FF8981]' : 'text-white/20'}"></i><span class="text-[10px] ${isOverdue ? 'text-[#FF8981]' : 'text-white/30'}">${dueStr}${isOverdue ? ' · Overdue' : ''}</span></div>` : ''}
+                    </div>`;
+                }).join('') || '<div class="text-[10px] opacity-20 uppercase tracking-widest py-4 text-center">Empty</div>';
+            });
+            localStorage.setItem('rad_kanban', JSON.stringify(kanbanCards));
+            if (window.lucide) lucide.createIcons({ nodes: document.querySelectorAll('#col-not-started [data-lucide], #col-in-progress [data-lucide], #col-complete [data-lucide]') });
         }
 
-        function addTask() { const inp = document.getElementById('taskInput'); if(inp.value.trim()){ tasks.push({text: inp.value.trim(), done: false}); inp.value=''; render(); } }
-        function toggleT(i) { tasks[i].done = !tasks[i].done; render(); }
-        function delT(i) { tasks.splice(i,1); render(); }
+        function openKanbanModal(editId = null) {
+            document.getElementById('kanban-edit-id').value = editId !== null ? editId : '';
+            document.getElementById('modal-title').innerText = editId !== null ? 'Edit Card' : 'Add Card';
+            if (editId !== null) {
+                const c = kanbanCards[editId];
+                document.getElementById('k-client').value = c.client;
+                document.getElementById('k-desc').value = c.desc;
+                document.getElementById('k-due').value = c.due || '';
+                document.getElementById('k-status').value = c.status;
+            } else {
+                document.getElementById('k-client').value = '';
+                document.getElementById('k-desc').value = '';
+                document.getElementById('k-due').value = '';
+                document.getElementById('k-status').value = 'not-started';
+            }
+            document.getElementById('kanban-modal').style.display = 'flex';
+            if (window.lucide) lucide.createIcons({ nodes: document.querySelectorAll('#kanban-modal [data-lucide]') });
+        }
+
+        function closeKanbanModal() { document.getElementById('kanban-modal').style.display = 'none'; }
+
+        function saveKanbanCard() {
+            const client = document.getElementById('k-client').value.trim();
+            const desc = document.getElementById('k-desc').value.trim();
+            const due = document.getElementById('k-due').value;
+            const status = document.getElementById('k-status').value;
+            if (!client) return;
+            const editId = document.getElementById('kanban-edit-id').value;
+            if (editId !== '') {
+                kanbanCards[parseInt(editId)] = { client, desc, due, status };
+            } else {
+                kanbanCards.push({ client, desc, due, status });
+            }
+            closeKanbanModal();
+            renderKanban();
+        }
+
+        function editKanbanCard(i) { openKanbanModal(i); }
+        function deleteKanbanCard(i) { kanbanCards.splice(i, 1); renderKanban(); }
 
         // --- CLOCK / WEATHER ---
         function updateUI() {
@@ -499,7 +610,7 @@
         if (Notification.permission === 'default') Notification.requestPermission();
         setInterval(updateUI, 60000);
         updateUI(); fetchWeather(); render(); updateModeButtons();
-        document.getElementById('taskInput').addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
+        renderKanban();
         document.getElementById('ytUrlInput').addEventListener('keypress', (e) => e.key === 'Enter' && changeVideo());
         ['custom-work','custom-break'].forEach(id => {
             document.getElementById(id).addEventListener('keypress', (e) => e.key === 'Enter' && applyCustomTimes());
