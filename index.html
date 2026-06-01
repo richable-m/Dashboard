@@ -49,6 +49,23 @@
         .time-edit-input::-webkit-inner-spin-button,
         .time-edit-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
+        /* Inline calendar picker */
+        .inline-cal { display: flex; flex-direction: column; gap: 6px; }
+        .inline-cal-header { display: flex; align-items: center; justify-content: space-between; }
+        .inline-cal-header button { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); border-radius: 6px; width: 24px; height: 24px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+        .inline-cal-header button:hover { border-color: var(--brand-yellow); color: var(--brand-yellow); }
+        .inline-cal-month { font-family: 'Syne Mono', monospace; font-size: 11px; font-weight: bold; color: var(--brand-yellow); letter-spacing: 0.05em; }
+        .inline-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .inline-cal-day-label { font-size: 9px; text-align: center; color: rgba(255,255,255,0.2); font-weight: bold; text-transform: uppercase; padding: 2px 0; }
+        .inline-cal-day { font-size: 11px; text-align: center; padding: 4px 2px; border-radius: 5px; cursor: pointer; color: rgba(255,255,255,0.5); transition: all 0.1s; border: 1px solid transparent; }
+        .inline-cal-day:hover { background: rgba(255,241,206,0.1); color: #fff; }
+        .inline-cal-day.today { border-color: rgba(255,241,206,0.3); color: rgba(255,241,206,0.8); }
+        .inline-cal-day.selected { background: var(--brand-yellow); color: #0a0a0a; font-weight: bold; }
+        .inline-cal-day.other-month { color: rgba(255,255,255,0.15); }
+        .inline-cal-day.empty { cursor: default; }
+        .inline-cal-clear { font-size: 10px; text-align: right; color: rgba(255,255,255,0.25); cursor: pointer; letter-spacing: 0.05em; text-transform: uppercase; font-weight: bold; }
+        .inline-cal-clear:hover { color: #FF8981; }
+
         /* Edit panel slide */
         #pomo-edit-panel {
             max-height: 0;
@@ -301,13 +318,15 @@
                     </div>
                     <div>
                         <label class="text-[10px] uppercase tracking-widest opacity-50 mb-1 block">Due Date</label>
-                        <div class="relative">
-                            <input type="date" id="k-due"
-                                class="bg-black border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#fff1ce] w-full transition text-[#fffefb] [color-scheme:dark] cursor-pointer"
-                                style="color-scheme:dark;">
-                            <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#fff1ce] opacity-40">
-                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                        <input type="hidden" id="k-due">
+                        <div class="bg-black border border-white/10 rounded-xl p-3 inline-cal" id="inline-cal-wrap">
+                            <div class="inline-cal-header">
+                                <button onclick="calNav(-1)">&#8249;</button>
+                                <span class="inline-cal-month" id="cal-month-label"></span>
+                                <button onclick="calNav(1)">&#8250;</button>
                             </div>
+                            <div class="inline-cal-grid" id="cal-grid"></div>
+                            <div class="inline-cal-clear" id="cal-clear" onclick="calClear()" style="display:none;">Clear date</div>
                         </div>
                     </div>
                     <div>
@@ -590,6 +609,79 @@
             dragSrcIndex = null;
         }
 
+        // --- INLINE CALENDAR ---
+        let calYear, calMonth, calSelectedDate = null;
+
+        function calInit(dateStr) {
+            const now = new Date();
+            calSelectedDate = dateStr ? new Date(dateStr + 'T00:00:00') : null;
+            calYear = calSelectedDate ? calSelectedDate.getFullYear() : now.getFullYear();
+            calMonth = calSelectedDate ? calSelectedDate.getMonth() : now.getMonth();
+            calRender();
+        }
+
+        function calNav(dir) {
+            calMonth += dir;
+            if (calMonth > 11) { calMonth = 0; calYear++; }
+            if (calMonth < 0) { calMonth = 11; calYear--; }
+            calRender();
+        }
+
+        function calRender() {
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            document.getElementById('cal-month-label').innerText = monthNames[calMonth] + ' ' + calYear;
+
+            const grid = document.getElementById('cal-grid');
+            const today = new Date(); today.setHours(0,0,0,0);
+            const firstDay = new Date(calYear, calMonth, 1).getDay();
+            const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+            const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+
+            // Day labels
+            const dayLabels = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+            let html = dayLabels.map(d => `<div class="inline-cal-day-label">${d}</div>`).join('');
+
+            // Prev month fill
+            for (let i = firstDay - 1; i >= 0; i--) {
+                html += `<div class="inline-cal-day other-month">${daysInPrev - i}</div>`;
+            }
+
+            // Current month days
+            for (let d = 1; d <= daysInMonth; d++) {
+                const thisDate = new Date(calYear, calMonth, d);
+                const isToday = thisDate.getTime() === today.getTime();
+                const isSelected = calSelectedDate && thisDate.getTime() === calSelectedDate.getTime();
+                let cls = 'inline-cal-day';
+                if (isToday) cls += ' today';
+                if (isSelected) cls += ' selected';
+                html += `<div class="${cls}" onclick="calSelect(${calYear},${calMonth},${d})">${d}</div>`;
+            }
+
+            // Next month fill
+            const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+            let nextDay = 1;
+            for (let i = firstDay + daysInMonth; i < totalCells; i++) {
+                html += `<div class="inline-cal-day other-month">${nextDay++}</div>`;
+            }
+
+            grid.innerHTML = html;
+            document.getElementById('cal-clear').style.display = calSelectedDate ? 'block' : 'none';
+        }
+
+        function calSelect(y, m, d) {
+            calSelectedDate = new Date(y, m, d);
+            const pad = n => String(n).padStart(2,'0');
+            const val = `${y}-${pad(m+1)}-${pad(d)}`;
+            document.getElementById('k-due').value = val;
+            calRender();
+        }
+
+        function calClear() {
+            calSelectedDate = null;
+            document.getElementById('k-due').value = '';
+            calRender();
+        }
+
         function openKanbanModal(editId = null) {
             document.getElementById('kanban-edit-id').value = editId !== null ? editId : '';
             document.getElementById('modal-title').innerText = editId !== null ? 'Edit Card' : 'Add Card';
@@ -597,12 +689,12 @@
                 const c = kanbanCards[editId];
                 document.getElementById('k-client').value = c.client;
                 document.getElementById('k-desc').value = c.desc;
-                document.getElementById('k-due').value = c.due || '';
+                calInit(c.due || '');
                 document.getElementById('k-status').value = c.status;
             } else {
                 document.getElementById('k-client').value = '';
                 document.getElementById('k-desc').value = '';
-                document.getElementById('k-due').value = '';
+                calInit('');
                 document.getElementById('k-status').value = 'not-started';
             }
             document.getElementById('kanban-modal').style.display = 'flex';
