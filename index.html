@@ -755,11 +755,16 @@
         // --- INIT ---
         if (Notification.permission === 'default') Notification.requestPermission();
         setInterval(updateUI, 60000);
-        updateUI(); fetchWeather(); render(); updateModeButtons();
-        renderKanban();
-        document.getElementById('ytUrlInput').addEventListener('keypress', (e) => e.key === 'Enter' && changeVideo());
-        ['custom-work','custom-break'].forEach(id => {
-            document.getElementById(id).addEventListener('keypress', (e) => e.key === 'Enter' && applyCustomTimes());
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            fetchWeather();
+            updateModeButtons();
+            renderKanban();
+            document.getElementById('ytUrlInput').addEventListener('keypress', (e) => e.key === 'Enter' && changeVideo());
+            ['custom-work','custom-break'].forEach(id => {
+                document.getElementById(id).addEventListener('keypress', (e) => e.key === 'Enter' && applyCustomTimes());
+            });
         });
     </script>
 </body>
