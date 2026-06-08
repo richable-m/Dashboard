@@ -177,6 +177,13 @@
         <div class="flex flex-col gap-2">
             <div class="bento-card p-0 overflow-hidden h-[563px] relative bg-black">
                 <div id="yt-player-container" class="w-full h-full"></div>
+                <!-- Click-to-play overlay -->
+                <div id="yt-overlay" onclick="startYT()" class="absolute inset-0 flex flex-col items-center justify-center cursor-pointer group z-10" style="background:rgba(10,10,10,0.85);">
+                    <div class="w-16 h-16 rounded-full border-2 border-[#fff1ce]/40 flex items-center justify-center mb-4 group-hover:border-[#fff1ce] group-hover:scale-110 transition-all duration-200">
+                        <svg class="w-7 h-7 text-[#fff1ce] ml-1" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <p class="brand-accent text-xs uppercase tracking-widest opacity-60 group-hover:opacity-100 transition">Click to play music</p>
+                </div>
             </div>
             <div class="bento-card py-3 px-4 flex-row items-center gap-4 border-white/5">
                 <div class="flex items-center gap-2 flex-none opacity-40">
@@ -352,14 +359,28 @@
     <script>
         // --- YOUTUBE ---
         let player;
+        let playerReady = false;
         const defaultVideoId = 'QyGbnE-RHKA';
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player-container', {
                 height: '100%', width: '100%', videoId: defaultVideoId,
-                playerVars: { 'autoplay': 1, 'controls': 1, 'rel': 0, 'modestbranding': 1 },
-                events: { 'onReady': (e) => { e.target.setVolume(10); e.target.playVideo(); } }
+                playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'modestbranding': 1 },
+                events: {
+                    'onReady': (e) => {
+                        e.target.setVolume(10);
+                        playerReady = true;
+                    }
+                }
             });
+        }
+
+        function startYT() {
+            const overlay = document.getElementById('yt-overlay');
+            overlay.style.display = 'none';
+            if (playerReady) {
+                player.playVideo();
+            }
         }
 
         function changeVideo() {
@@ -367,6 +388,8 @@
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = urlInput.match(regExp);
             if (match && match[2].length == 11) {
+                const overlay = document.getElementById('yt-overlay');
+                overlay.style.display = 'none';
                 player.loadVideoById(match[2]);
                 player.setVolume(10);
                 document.getElementById('ytUrlInput').value = '';
