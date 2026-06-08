@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCC Dash v3.2</title>
+    <title>RCC Dash v3.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -172,10 +172,23 @@
 
         </div>
 
-        <!-- CHILLHOP -->
-        <div class="bento-card p-0 relative bg-black" style="height:499px; overflow:hidden;">
-            <iframe src="https://app.chillhop.com/" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
-                style="border-radius:1.25rem; width:1280px; height:800px; transform:scale(0.64); transform-origin:top left; pointer-events:all;"></iframe>
+        <!-- CHILLHOP / SOUNDCLOUD -->
+        <div class="bento-card border-white/5 flex flex-col gap-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-[#fff1ce] opacity-60" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                    <span class="text-[10px] uppercase font-bold tracking-widest opacity-40">Chillhop Music</span>
+                </div>
+                <a href="https://soundcloud.com/chillhopdotcom" target="_blank" class="brand-accent text-[10px] opacity-40 hover:opacity-100 transition uppercase tracking-widest">Open →</a>
+            </div>
+            <iframe
+                src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/chillhopdotcom/sets/chillhop-essentials-summer-2026&color=%23fff1ce&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
+                width="100%"
+                height="400"
+                frameborder="0"
+                allow="autoplay"
+                style="border-radius:0.75rem;">
+            </iframe>
         </div>
 
         <!-- QUICK LINKS — full width row -->
